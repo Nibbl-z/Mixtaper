@@ -1,11 +1,11 @@
 use actix_web::{web, HttpResponse, Responder};
 use serde::Deserialize;
-use dotenv::dotenv;
-use std::env;
-use unofficial_appwrite::client::{Client, ClientBuilder};
-use unofficial_appwrite::error::Error;
+use bcrypt::{DEFAULT_COST, hash};
+
 use unofficial_appwrite::services::server::users::Users;
 use unofficial_appwrite::id::ID;
+
+use crate::modules::appwrite_tools;
 
 #[derive(Deserialize)]
 pub struct SignupData {
@@ -14,43 +14,22 @@ pub struct SignupData {
     password: String
 }
 
-fn build_client(endpoint: &str, id: &str, key: &str) -> Result<Client, Error> {
-    ClientBuilder::default()
-    .set_endpoint(endpoint)?
-    .set_project(id)?
-    .set_key(key)?
-    .build()
-}
-
 pub async fn signup(data: web::Json<SignupData>) -> impl Responder {
-    dotenv().ok();
-
-    let api_endpoint = match env::var("APPWRITE_API_ENDPOINT") {
-        Ok(endpoint) => endpoint,
-        Err(_) => return HttpResponse::InternalServerError().body("APPWRITE_API_ENDPOINT was not defined in the .env file")
-    };
-    
-    let project_id = match env::var("APPWRITE_PROJECT_ID") {
-        Ok(id) => id,
-        Err(_) => return HttpResponse::InternalServerError().body("APPWRITE_PROJECT_ID was not defined in the .env file")
-    };
-
-    let api_key = match env::var("APPWRITE_API_KEY") {
-        Ok(endpoint) => endpoint,
-        Err(_) => return HttpResponse::InternalServerError().body("APPWRITE_API_ENDPOINT was not defined in the .env file")
-    };
-    
-    let client= match build_client(&api_endpoint, &project_id, &api_key) {
+    let client = match appwrite_tools::get_client(None) {
         Ok(c) => c,
-        Err(_) => return HttpResponse::InternalServerError().body("Client failed to build")
+        Err(error) => return HttpResponse::InternalServerError().body(error)
     };
     
-    let create_user = match Users::create(
+    let hashed_password = match hash(&data.password, DEFAULT_COST) {
+        Ok(pass) => pass,
+        Err(_) => return HttpResponse::InternalServerError().body("Password failed to hash")
+    };
+    
+    let create_user = match Users::create_bcrypt_user(
         &client, 
         ID::unique(), 
-        Some(&data.email),
-        None, 
-        Some(&data.password), 
+        &data.email,
+        &hashed_password, 
         Some(&data.username)
     ).await {
         Ok(c) => c,
