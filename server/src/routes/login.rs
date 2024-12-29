@@ -30,5 +30,5 @@ pub async fn login(data: web::Json<LoginData>) -> impl Responder {
         Err(error) => return HttpResponse::Unauthorized().body(error.to_string())
     };
     
-    HttpResponse::Ok().body(session.secret)
+    HttpResponse::Ok().body(session.id)
 }

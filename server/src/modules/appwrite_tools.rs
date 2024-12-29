@@ -2,6 +2,7 @@ use dotenv::dotenv;
 use serde_json::json;
 use unofficial_appwrite::models::user::User;
 use unofficial_appwrite::query::Query;
+use unofficial_appwrite::services::server::account::Account;
 use unofficial_appwrite::services::server::users::Users;
 use std::env;
 
@@ -52,6 +53,15 @@ pub fn get_client(token: Option<&str>) -> Result<Client, String> {
             Ok(c) => return Ok(c),
             Err(_) => return Err(String::from("Client failed to build"))
         },
+    }
+}
+
+pub async fn get_user(token: &str) -> Result<User, String> {
+    let client = get_client(Some(token))?;
+
+    match Account::get(&client).await {
+        Ok(user) => Ok(user),
+        Err(error) => Err(error.to_string())
     }
 }
 
