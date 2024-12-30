@@ -5,6 +5,8 @@ import (
 	"io/fs"
 	"os"
 
+	"server/utils"
+
 	"github.com/appwrite/sdk-for-go/account"
 	"github.com/appwrite/sdk-for-go/appwrite"
 	"github.com/appwrite/sdk-for-go/file"
@@ -15,21 +17,16 @@ import (
 )
 
 func UploadRiq(ctx *atreugo.RequestCtx) error {
-	sessionToken := ctx.Request.Header.Peek("Authorization")
 	
-	if sessionToken == nil {
+	client, success := utils.CreateClientWithHeaders(ctx)
+
+	if !success {
 		return ctx.JSONResponse(map[string]interface{}{
 			"successful" : false,
-			"message": "Authorization missing",
+			"message": "Unauthorized",
 		}, 401)
 	}
 	
-	client := appwrite.NewClient(
-		appwrite.WithEndpoint(os.Getenv("APPWRITE_API_ENDPOINT")),
-		appwrite.WithProject(os.Getenv("APPWRITE_PROJECT_ID")),
-		appwrite.WithSession(string(sessionToken)),
-	)
-
 	account_service := account.New(client)
 	
 	user, err := account_service.Get()

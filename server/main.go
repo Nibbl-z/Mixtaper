@@ -23,6 +23,7 @@ func main() {
     server.POST("/signup", routes.Signup)
     server.POST("/login", routes.Login)
     server.POST("/upload_riq", routes.UploadRiq)
+    server.POST("/post_level", routes.PostLevel)
 
     if err := server.ListenAndServe(); err != nil {
         panic(err)
