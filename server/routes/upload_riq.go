@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"errors"
 	"fmt"
 	"io/fs"
 	"os"
@@ -19,7 +18,10 @@ func UploadRiq(ctx *atreugo.RequestCtx) error {
 	sessionToken := ctx.Request.Header.Peek("Authorization")
 	
 	if sessionToken == nil {
-		return ctx.ErrorResponse(errors.New("unauthorized"), 401)
+		return ctx.JSONResponse(map[string]interface{}{
+			"successful" : false,
+			"message": "Authorization missing",
+		}, 401)
 	}
 	
 	client := appwrite.NewClient(
@@ -33,7 +35,10 @@ func UploadRiq(ctx *atreugo.RequestCtx) error {
 	user, err := account_service.Get()
 	
 	if err != nil {
-		return ctx.ErrorResponse(err, 500)
+		return ctx.JSONResponse(map[string]interface{}{
+			"successful" : false,
+			"message": "Failed to get user",
+		}, 500)
 	}
 	
 	os.Mkdir("uploads", fs.FileMode(0644))
@@ -41,14 +46,19 @@ func UploadRiq(ctx *atreugo.RequestCtx) error {
 	body := ctx.Request.Body()
 	fmt.Println(string(body))
 
+	path := "uploads/" + user.Id + ".riq"
+
 	err = os.WriteFile(
-		"uploads/" + user.Id + ".riq", 
+		path, 
 		body,
 		fs.FileMode(0644),
 	)
 
 	if err != nil {
-		return ctx.ErrorResponse(err, 500)
+		return ctx.JSONResponse(map[string]interface{}{
+			"successful" : false,
+			"message": "Failed to create temp upload file",
+		}, 500)
 	}
 	
 	permissions := []string{
@@ -59,16 +69,31 @@ func UploadRiq(ctx *atreugo.RequestCtx) error {
 	
 	storage := appwrite.NewStorage(client)
 	
-	file, err := storage.CreateFile(
+	_, err = storage.CreateFile(
 		"riq_files",
 		id.Unique(),
-		file.NewInputFile("uploads/" + user.Id + ".riq",  user.Id + ".riq"),
+		file.NewInputFile(path, user.Id + ".riq"),
 		storage.WithCreateFilePermissions(permissions),
 	)
-	
+
 	if err != nil {
-		return ctx.ErrorResponse(err, 500)
+		return ctx.JSONResponse(map[string]interface{}{
+			"successful" : false,
+			"message": "Failed to upload .riq to server",
+		}, 500)
 	}
 
-	return ctx.TextResponse(file.Id)
+	fileRemoveErr := os.Remove(path)
+
+	if fileRemoveErr != nil {
+		return ctx.JSONResponse(map[string]interface{}{
+			"successful" : false,
+			"message": "Failed to remove temp file",
+		}, 500)
+	}
+
+	return ctx.JSONResponse(map[string]interface{}{
+		"successful" : true,
+		"message": "Uploaded .riq successfully!",
+	}, 200)
 }

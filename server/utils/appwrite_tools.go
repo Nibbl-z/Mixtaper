@@ -1,22 +1,33 @@
 package utils
 
 import (
+	"github.com/appwrite/sdk-for-go/appwrite"
 	"github.com/appwrite/sdk-for-go/client"
 	"github.com/appwrite/sdk-for-go/models"
 	"github.com/appwrite/sdk-for-go/query"
-	"github.com/appwrite/sdk-for-go/users"
 )
 
-func GetUserByUsername(client *client.Client, username string) (models.User, error) {
-	usersService := users.New(*client)
-	
-	usersList, err := usersService.List(
-		usersService.WithListQueries([]string{query.Equal("name", username)}),
-	)
+func GetUserByUsername(client *client.Client, username string) (models.User, int) {
+	database := appwrite.NewDatabases(*client)
+	users := appwrite.NewUsers(*client)
+
+	list, err := database.ListDocuments("mixtaper", "usernames", database.WithListDocumentsQueries(
+		[]string{query.Equal("username", username)},
+	))
 	
 	if err != nil {
-		return models.User{}, err
+		return models.User{}, 500
+	}
+
+	if list.Total == 0 {
+		return models.User{},400
+	}
+
+	user, err := users.Get(list.Documents[0].Id)
+
+	if err != nil {
+		return models.User{}, 500
 	}
 	
-	return usersList.Users[0], nil
+	return *user, 200
 }

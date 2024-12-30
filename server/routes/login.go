@@ -3,7 +3,6 @@ package routes
 import (
 	"encoding/json"
 	"os"
-	"errors"
 	"regexp"
 
 	"github.com/appwrite/sdk-for-go/appwrite"
@@ -22,7 +21,10 @@ func Login(ctx *atreugo.RequestCtx) error {
 	var loginRequest LoginData
 	
 	if err := json.Unmarshal(ctx.Request.Body(), &loginRequest); err != nil {
-		return ctx.ErrorResponse(errors.New("signup data not provided correctly"), 400)
+		return ctx.JSONResponse(map[string]interface{}{
+			"successful" : false,
+			"message": "Login data was not provided correctly",
+		}, 400)
 	}
 
 	client := appwrite.NewClient(
@@ -36,15 +38,27 @@ func Login(ctx *atreugo.RequestCtx) error {
 	isEmail, err := regexp.MatchString(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`, loginRequest.Identifier)
 		
 	if err != nil {
-		return ctx.ErrorResponse(err, 500)
+		return ctx.JSONResponse(map[string]interface{}{
+			"successful" : false,
+			"message": "Email regex failed",
+		}, 500)
 	}
 
 	if isEmail {
 		email = loginRequest.Identifier
 	} else {
-		user, err := utils.GetUserByUsername(&client, loginRequest.Identifier)
-		if err != nil {
-			return ctx.ErrorResponse(err, 500)
+		user, code := utils.GetUserByUsername(&client, loginRequest.Identifier)
+
+		if code == 500 {
+			return ctx.JSONResponse(map[string]interface{}{
+				"successful" : false,
+				"message": "Failed to fetch user from database",
+			}, 500)
+		} else if code == 400 {
+			return ctx.JSONResponse(map[string]interface{}{
+				"successful" : false,
+				"message": "Username was not found in the database!",
+			}, 400)
 		}
 
 		email = user.Email
@@ -58,8 +72,15 @@ func Login(ctx *atreugo.RequestCtx) error {
 	)
 
 	if err != nil {
-		return ctx.ErrorResponse(err, 500)
+		return ctx.JSONResponse(map[string]interface{}{
+			"successful" : false,
+			"message": "Invalid credentials",
+		}, 400)
 	}
 
-	return ctx.TextResponse(session.Secret)
+	return ctx.JSONResponse(map[string]interface{}{
+		"successful" : true,
+		"message": "Logged in successfully!",
+		"secret": session.Secret,
+	}, 400)
 }
