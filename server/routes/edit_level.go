@@ -41,7 +41,7 @@ func EditLevel(ctx *atreugo.RequestCtx) error {
 			"message": "Unauthorized",
 		}, 401)
 	}
-
+	
 	database := appwrite.NewDatabases(client)
 	
 	document := map[string]string{

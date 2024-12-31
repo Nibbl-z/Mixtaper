@@ -70,7 +70,7 @@ func PostLevel(ctx *atreugo.RequestCtx) error {
 		document["chartName"] = postRequest.ChartName
 	}
 	
-	_, err = database.CreateDocument(
+	level, err := database.CreateDocument(
 		"mixtaper",
 		"levels",
 		id.Unique(),
@@ -93,5 +93,6 @@ func PostLevel(ctx *atreugo.RequestCtx) error {
 	return ctx.JSONResponse(map[string]interface{}{
 		"successful": true,
 		"message": "Posted level successfully!",
+		"id" : level.Id,
 	}, 200)
 }

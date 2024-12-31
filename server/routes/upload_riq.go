@@ -10,14 +10,12 @@ import (
 	"github.com/appwrite/sdk-for-go/account"
 	"github.com/appwrite/sdk-for-go/appwrite"
 	"github.com/appwrite/sdk-for-go/file"
-	"github.com/appwrite/sdk-for-go/id"
 	"github.com/appwrite/sdk-for-go/permission"
 	"github.com/appwrite/sdk-for-go/role"
 	"github.com/savsgio/atreugo/v11"
 )
 
 func UploadRiq(ctx *atreugo.RequestCtx) error {
-	
 	client, success := utils.CreateClientWithHeaders(ctx)
 
 	if !success {
@@ -26,6 +24,17 @@ func UploadRiq(ctx *atreugo.RequestCtx) error {
 			"message": "Unauthorized",
 		}, 401)
 	}
+
+	id := ctx.Request.Header.Peek("ID")
+
+	if id == nil {
+		return ctx.JSONResponse(map[string]interface{}{
+			"successful" : false,
+			"message": "Level ID is missing",
+		}, 400)
+	}
+
+	// TODO: check if level id is real
 	
 	account_service := account.New(client)
 	
@@ -75,7 +84,7 @@ func UploadRiq(ctx *atreugo.RequestCtx) error {
 	
 	_, err = storage.CreateFile(
 		"riq_files",
-		id.Unique(),
+		string(id),
 		file.NewInputFile(path, user.Id + ".riq"),
 		storage.WithCreateFilePermissions(permissions),
 	)
@@ -95,7 +104,7 @@ func UploadRiq(ctx *atreugo.RequestCtx) error {
 			"message": "Failed to remove temp file",
 		}, 500)
 	}
-
+	
 	return ctx.JSONResponse(map[string]interface{}{
 		"successful" : true,
 		"message": "Uploaded .riq successfully!",

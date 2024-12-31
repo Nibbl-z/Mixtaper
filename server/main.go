@@ -31,6 +31,7 @@ func main() {
     server.GET("/download_riq", routes.DownloadRiq)
 
     server.POST("/edit_level", routes.EditLevel)
+    server.POST("/delete_level", routes.DeleteLevel)
     
     server.POST("/send_email_verification", routes.SendEmailVerification)
     server.PUT("/verify_email", routes.VerifyEmail)
