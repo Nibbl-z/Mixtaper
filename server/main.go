@@ -27,6 +27,7 @@ func main() {
     server.POST("/change_username", routes.ChangeUsername)
 
     server.GET("/get_level", routes.GetLevel)
+    server.GET("/download_riq", routes.DownloadRiq)
 
     if err := server.ListenAndServe(); err != nil {
         panic(err)
