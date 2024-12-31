@@ -25,10 +25,21 @@ func main() {
     server.POST("/upload_riq", routes.UploadRiq)
     server.POST("/post_level", routes.PostLevel)
     server.POST("/change_username", routes.ChangeUsername)
-
+    
     server.GET("/get_level", routes.GetLevel)
     server.GET("/download_riq", routes.DownloadRiq)
+    
+    server.POST("/send_email_verification", routes.SendEmailVerification)
+    server.PUT("/verify_email", routes.VerifyEmail)
 
+    server.UseBefore(func(ctx *atreugo.RequestCtx) error {
+        corsAllowOrigin := string(ctx.URI().Scheme()) + "://" + string(ctx.Host())
+        
+        ctx.Response.Header.Set("Access-Control-Allow-Origin", corsAllowOrigin)
+
+        return ctx.Next()
+    })
+    
     if err := server.ListenAndServe(); err != nil {
         panic(err)
     }

@@ -25,7 +25,7 @@ func ChangeUsername(ctx *atreugo.RequestCtx) error {
 	
 	client := utils.CreateClient()
 	user_client, success := utils.CreateClientWithHeaders(ctx)
-
+	
 	if !success {
 		return ctx.JSONResponse(map[string]interface{}{
 			"successful" : false,
