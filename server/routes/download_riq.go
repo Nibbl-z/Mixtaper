@@ -10,10 +10,7 @@ func DownloadRiq(ctx *atreugo.RequestCtx) error {
 	id := ctx.Request.Body()
 	
 	if string(id) == "" {
-		return ctx.JSONResponse(map[string]interface{}{
-			"successful" : false,
-			"message": "Level ID missing",
-		}, 400)
+		return utils.BadRespone(ctx, "Level ID missing")
 	}
 
 	client := utils.CreateClient()
@@ -24,13 +21,10 @@ func DownloadRiq(ctx *atreugo.RequestCtx) error {
 		"riq_files",
 		string(id),
 	)
-
-	if err != nil {
-		return ctx.JSONResponse(map[string]interface{}{
-			"successful" : false,
-			"message": "Failed to download .riq",
-		}, 500)
+	
+	if err != nil {	
+		return utils.ErrorResponse(ctx, "Failed to download riq", err)
 	}
-
+	
 	return ctx.RawResponseBytes(*fileBytes, 200)
 }

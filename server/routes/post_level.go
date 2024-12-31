@@ -22,38 +22,26 @@ func PostLevel(ctx *atreugo.RequestCtx) error {
 	var postRequest PostData
 	
 	if err := json.Unmarshal(ctx.Request.Body(), &postRequest); err != nil {
-		return ctx.JSONResponse(map[string]interface{}{
-			"successful" : false,
-			"message": "Post data was not provided correctly",
-		}, 400)
+		return utils.BadRespone(ctx, "Post data was not provided correctly")
 	}
 	
 	client, success := utils.CreateClientWithHeaders(ctx)
 	
 	if !success {
-		return ctx.JSONResponse(map[string]interface{}{
-			"successful" : false,
-			"message": "Unauthorized",
-		}, 401)
+		return utils.UnauthorizedResponse(ctx)
 	}
-
+	
 	database := appwrite.NewDatabases(client)
 	account := appwrite.NewAccount(client)
 
 	user, err := account.Get()
 
 	if err != nil {
-		return ctx.JSONResponse(map[string]interface{}{
-			"successful" : false,
-			"message": "Failed to get user",
-		}, 500)
+		return utils.ErrorResponse(ctx, "Failed to get user", err)
 	}
 	
 	if !user.EmailVerification {
-		return ctx.JSONResponse(map[string]interface{}{
-			"successful" : false,
-			"message": "Please verify your email before posting!",
-		}, 400)
+		return utils.BadRespone(ctx, "Please verify your email before posting!")
 	}
 
 	document := map[string]string{
@@ -84,15 +72,8 @@ func PostLevel(ctx *atreugo.RequestCtx) error {
 	)
 
 	if err != nil {
-		return ctx.JSONResponse(map[string]interface{}{
-			"successful" : false,
-			"message": "Failed to post level metadata to database: " + err.Error(),
-		}, 500)
+		return utils.ErrorResponse(ctx, "Failed to post level metadata to database", err)
 	}
 
-	return ctx.JSONResponse(map[string]interface{}{
-		"successful": true,
-		"message": "Posted level successfully!",
-		"id" : level.Id,
-	}, 200)
+	return utils.OkPlusResponse(ctx, "Posted level successfully!", level.Id, "id")
 }

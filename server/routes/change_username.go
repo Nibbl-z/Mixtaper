@@ -10,36 +10,24 @@ func ChangeUsername(ctx *atreugo.RequestCtx) error {
 	username := ctx.Request.Body()
 
 	if len(username) > 20 {
-		return ctx.JSONResponse(map[string]interface{}{
-			"successful" : false,
-			"message": "Username must be less than 20 characters!",
-		}, 400)
+		return utils.BadRespone(ctx, "Username must be less than 20 characters!")
 	}
-	
+
 	if len(username) < 3 {
-		return ctx.JSONResponse(map[string]interface{}{
-			"successful" : false,
-			"message": "Username must be at least 3 characters long!",
-		}, 400)
+		return utils.BadRespone(ctx, "Username must be at least 3 characters long!")
 	}
 	
 	client := utils.CreateClient()
 	user_client, success := utils.CreateClientWithHeaders(ctx)
 	
 	if !success {
-		return ctx.JSONResponse(map[string]interface{}{
-			"successful" : false,
-			"message": "Unauthorized",
-		}, 401)
+		return utils.UnauthorizedResponse(ctx)
 	}
 	
 	user, err := appwrite.NewAccount(user_client).Get()
 	
 	if err != nil {
-		return ctx.JSONResponse(map[string]interface{}{
-			"successful" : false,
-			"message": "Failed to get user",
-		}, 500)
+		return utils.ErrorResponse(ctx, "Failed to get user", err)
 	}
 	
 	database := appwrite.NewDatabases(client)
@@ -55,22 +43,11 @@ func ChangeUsername(ctx *atreugo.RequestCtx) error {
 	
 	if err != nil {
 		if err.Error() == "Document with the requested ID already exists. Try again with a different ID or use ID.unique() to generate a unique ID." {
-			return ctx.JSONResponse(map[string]interface{}{
-				"successful" : false,
-				"message": "Username is already taken!",
-			}, 400)
+			return utils.BadRespone(ctx, "Username is already taken!")
 		} else {
-			return ctx.JSONResponse(map[string]interface{}{
-				"successful" : false,
-				"message": "Failed to update username: " + err.Error(),
-			}, 500)
+			return utils.ErrorResponse(ctx, "Failed to update username", err)
 		}
-
-		
 	}
 
-	return ctx.JSONResponse(map[string]interface{}{
-		"successful" : true,
-		"message": "Username updated successfully!",
-	}, 200)
+	return utils.OkResponse(ctx, "Username updated successfully!")
 }

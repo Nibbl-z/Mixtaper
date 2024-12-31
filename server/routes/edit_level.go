@@ -20,26 +20,21 @@ func EditLevel(ctx *atreugo.RequestCtx) error {
 	var editRequest EditPostData
 	
 	if err := json.Unmarshal(ctx.Request.Body(), &editRequest); err != nil {
-		return ctx.JSONResponse(map[string]interface{}{
-			"successful" : false,
-			"message": "Post data was not provided correctly",
-		}, 400)
+		return utils.BadRespone(ctx, "Post data was not provided correctly")
 	}
 
 	if editRequest.SongName == "" || editRequest.SongArtist == "" || editRequest.ID == "" {
-		return ctx.JSONResponse(map[string]interface{}{
-			"successful" : false,
-			"message": "Post data is missing required fields",
-		}, 400)
+		return utils.BadRespone(ctx, "Post data is missing required fields")
+	}
+
+	if !utils.CheckLevelExists(editRequest.ID) {
+		return utils.BadRespone(ctx, "Level doesn't exist")
 	}
 	
 	client, success := utils.CreateClientWithHeaders(ctx)
 	
 	if !success {
-		return ctx.JSONResponse(map[string]interface{}{
-			"successful" : false,
-			"message": "Unauthorized",
-		}, 401)
+		return utils.UnauthorizedResponse(ctx)
 	}
 	
 	database := appwrite.NewDatabases(client)
@@ -65,14 +60,8 @@ func EditLevel(ctx *atreugo.RequestCtx) error {
 	)
 
 	if err != nil {
-		return ctx.JSONResponse(map[string]interface{}{
-			"successful" : false,
-			"message": "Failed to update level: " + err.Error(),
-		}, 500)
+		return utils.ErrorResponse(ctx, "Failed to update level", err)
 	}
 	
-	return ctx.JSONResponse(map[string]interface{}{
-		"successful" : true,
-		"message" : "Updated level successfully!",
-	}, 200)
+	return utils.OkResponse(ctx, "Updated level successfully!")
 }

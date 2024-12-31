@@ -19,12 +19,9 @@ func GetLevel(ctx *atreugo.RequestCtx) error {
 	id := ctx.Request.Body()
 	
 	if string(id) == "" {
-		return ctx.JSONResponse(map[string]interface{}{
-			"successful" : false,
-			"message": "Level ID missing",
-		}, 400)
+		return utils.BadRespone(ctx, "Level ID missing")
 	}
-
+	
 	client := utils.CreateClient()
 	
 	database := appwrite.NewDatabases(client)
@@ -36,24 +33,15 @@ func GetLevel(ctx *atreugo.RequestCtx) error {
 	)
 
 	if err != nil {
-		return ctx.JSONResponse(map[string]interface{}{
-			"successful" : false,
-			"message": "Failed to get level",
-		}, 500)
+		return utils.ErrorResponse(ctx, "Failed to get level", err)
 	}
 	
 	var level Level 
 	err = document.Decode(&level)
 	
 	if err != nil {
-		return ctx.JSONResponse(map[string]interface{}{
-			"successful" : false,
-			"message": "Could not parse level data:" + err.Error(),
-		}, 500)
+		return utils.ErrorResponse(ctx, "Could not parse level data", err)
 	}
-	
-	return ctx.JSONResponse(map[string]interface{}{
-		"successful" : true,
-		"message" : level,
-	})
+
+	return utils.OkResponse(ctx, level)
 }

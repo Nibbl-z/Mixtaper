@@ -10,19 +10,13 @@ func DeleteLevel(ctx *atreugo.RequestCtx) error {
 	id := ctx.Request.Body()
 	
 	if string(id) == "" {
-		return ctx.JSONResponse(map[string]interface{}{
-			"successful" : false,
-			"message": "Level ID missing",
-		}, 400)
+		return utils.BadRespone(ctx, "Level ID missing")
 	}
 
 	client, success := utils.CreateClientWithHeaders(ctx)
 	
 	if !success {
-		return ctx.JSONResponse(map[string]interface{}{
-			"successful" : false,
-			"message": "Unauthorized",
-		}, 401)
+		return utils.UnauthorizedResponse(ctx)
 	}
 	
 	database := appwrite.NewDatabases(client)
@@ -35,10 +29,7 @@ func DeleteLevel(ctx *atreugo.RequestCtx) error {
 	)
 	
 	if err != nil {
-		return ctx.JSONResponse(map[string]interface{}{
-			"successful" : false,
-			"message": "Failed to delete level: " + err.Error(),
-		}, 500)
+		return utils.ErrorResponse(ctx, "Failed to delete level", err)
 	}
 
 	_, err = storage.DeleteFile(
@@ -47,14 +38,8 @@ func DeleteLevel(ctx *atreugo.RequestCtx) error {
 	)
 
 	if err != nil {
-		return ctx.JSONResponse(map[string]interface{}{
-			"successful" : false,
-			"message": "Failed to delete RIQ: " + err.Error(),
-		}, 500)
+		return utils.ErrorResponse(ctx, "Failed to delete RIQ", err)
 	}
-	
-	return ctx.JSONResponse(map[string]interface{}{
-		"successful" : true,
-		"message": "Deleted level successfully!",
-	}, 200)
+
+	return utils.OkResponse(ctx, "Deleted level successfully!")
 }

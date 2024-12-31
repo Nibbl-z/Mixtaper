@@ -10,10 +10,7 @@ func SendEmailVerification(ctx * atreugo.RequestCtx) error {
 	client, success := utils.CreateClientWithHeaders(ctx)
 	
 	if !success {
-		return ctx.JSONResponse(map[string]interface{}{
-			"successful" : false,
-			"message": "Unauthorized",
-		}, 401)
+		return utils.UnauthorizedResponse(ctx)
 	}
 
 	account := appwrite.NewAccount(client)
@@ -23,14 +20,8 @@ func SendEmailVerification(ctx * atreugo.RequestCtx) error {
 	)
 	
 	if err != nil {
-		return ctx.JSONResponse(map[string]interface{}{
-			"successful" : false,
-			"message": "Failed to send verification email: " + err.Error(),
-		}, 500)
+		return utils.ErrorResponse(ctx, "Failed to send verification email", err)
 	}
-
-	return ctx.JSONResponse(map[string]interface{}{
-		"successful" : true,
-		"message": response,
-	}, 200)
+	
+	return utils.OkResponse(ctx, response)
 }

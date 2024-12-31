@@ -18,16 +18,13 @@ func GetLevelsFromUser(ctx *atreugo.RequestCtx) error {
 	id := ctx.Request.Body()
 	
 	if string(id) == "" {
-		return ctx.JSONResponse(map[string]interface{}{
-			"successful" : false,
-			"message": "User ID missing",
-		}, 400)
+		return utils.BadRespone(ctx, "User ID missing")
 	}
 	
 	client := utils.CreateClient()
 	
 	database := appwrite.NewDatabases(client)
-
+	
 	levels, err := database.ListDocuments(
 		"mixtaper",
 		"levels",
@@ -37,17 +34,11 @@ func GetLevelsFromUser(ctx *atreugo.RequestCtx) error {
 	)
 	
 	if err != nil {
-		return ctx.JSONResponse(map[string]interface{}{
-			"successful" : false,
-			"message": "Failed to fetch levels from database",
-		}, 500)
+		return utils.ErrorResponse(ctx, "Failed to fetch levels from database", err)
 	}
 
 	var levelList LevelList
 	levels.Decode(&levelList)
 	
-	return ctx.JSONResponse(map[string]interface{}{
-		"successful" : true,
-		"message": levelList.Documents,
-	}, 200)
+	return utils.OkResponse(ctx, levelList.Documents)
 }

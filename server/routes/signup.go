@@ -23,24 +23,15 @@ func Signup(ctx *atreugo.RequestCtx) error {
 	var signupRequest SignupData
 	
 	if err := json.Unmarshal(ctx.Request.Body(), &signupRequest); err != nil {
-		return ctx.JSONResponse(map[string]interface{}{
-			"successful" : false,
-			"message": "Signup data was not provided correctly",
-		}, 400)
+		return utils.BadRespone(ctx, "Signup data was not provided correctly")
 	}
 	
 	if len(signupRequest.Username) > 20 {
-		return ctx.JSONResponse(map[string]interface{}{
-			"successful" : false,
-			"message": "Username must be less than 20 characters!",
-		}, 400)
+		return utils.BadRespone(ctx, "Username must be less than 20 characters!")
 	}
 	
 	if len(signupRequest.Username) < 3 {
-		return ctx.JSONResponse(map[string]interface{}{
-			"successful" : false,
-			"message": "Username must be at least 3 characters long!",
-		}, 400)
+		return utils.BadRespone(ctx, "Username must be at least 3 characters long!")
 	}
 	
 	client := utils.CreateClient()
@@ -52,26 +43,17 @@ func Signup(ctx *atreugo.RequestCtx) error {
 	))
 
 	if err != nil {
-		return ctx.JSONResponse(map[string]interface{}{
-			"successful" : false,
-			"message": "Failed to fetch used usernames",
-		}, 500)
+		return utils.ErrorResponse(ctx, "Failed to fetch used usernames", err)
 	}
 	
 	if list.Total > 0 {
-		return ctx.JSONResponse(map[string]interface{}{
-			"successful" : false,
-			"message": "Username is taken",
-		}, 400)
+		return utils.BadRespone(ctx, "Username is taken")
 	}
 	
 	hashed_password, err := bcrypt.GenerateFromPassword([]byte(signupRequest.Password), bcrypt.DefaultCost)
 	
 	if err != nil {
-		return ctx.JSONResponse(map[string]interface{}{
-			"successful" : false,
-			"message": "Failed to hash password",
-		}, 500)
+		return utils.ErrorResponse(ctx, "Failed to hash password", err)
 	}
 	
 	users := appwrite.NewUsers(client)
@@ -84,10 +66,7 @@ func Signup(ctx *atreugo.RequestCtx) error {
 	)
 	
 	if err != nil {
-		return ctx.JSONResponse(map[string]interface{}{
-			"successful" : false,
-			"message": "Failed to create user",
-		}, 500)
+		return utils.ErrorResponse(ctx, "Failed to create user", err)
 	}
 
 	_, err = database.CreateDocument(
@@ -100,14 +79,8 @@ func Signup(ctx *atreugo.RequestCtx) error {
 	)
 
 	if err != nil {
-		return ctx.JSONResponse(map[string]interface{}{
-			"successful" : false,
-			"message": "Failed to add username to database",
-		}, 500)
+		return utils.ErrorResponse(ctx, "Failed to add username to database", err)
 	}
-
-	return ctx.JSONResponse(map[string]interface{}{
-		"successful" : true,
-		"message": user.Name + " has signed up successfully!",
-	}, 200)
+	
+	return utils.OkResponse(ctx, user.Name + " has signed up successfully!")
 }

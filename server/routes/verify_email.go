@@ -13,10 +13,7 @@ func VerifyEmail(ctx *atreugo.RequestCtx) error {
 	client, success := utils.CreateClientWithHeaders(ctx)
 
 	if !success {
-		return ctx.JSONResponse(map[string]interface{}{
-			"successful" : false,
-			"message": "Unauthorized",
-		}, 401)
+		return utils.UnauthorizedResponse(ctx)
 	}
 
 	account := appwrite.NewAccount(client)
@@ -24,14 +21,8 @@ func VerifyEmail(ctx *atreugo.RequestCtx) error {
 	_, err := account.UpdateVerification(userId, secret)
 
 	if err != nil {
-		return ctx.JSONResponse(map[string]interface{}{
-			"successful" : false,
-			"message": "Failed to verify user: " + err.Error(),
-		}, 500)
+		return utils.ErrorResponse(ctx, "Failed to verify user", err)
 	}
 	
-	return ctx.JSONResponse(map[string]interface{}{
-		"successful" : true,
-		"message": "Verified successfully!",
-	}, 200)
+	return utils.OkResponse(ctx, "Verified successfully!")
 }
