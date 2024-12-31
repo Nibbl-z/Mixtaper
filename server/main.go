@@ -24,6 +24,7 @@ func main() {
     server.POST("/login", routes.Login)
     server.POST("/upload_riq", routes.UploadRiq)
     server.POST("/post_level", routes.PostLevel)
+    server.POST("/change_username", routes.ChangeUsername)
 
     if err := server.ListenAndServe(); err != nil {
         panic(err)

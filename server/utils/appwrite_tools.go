@@ -2,16 +2,18 @@ package utils
 
 import (
 	"os"
+	
 	"github.com/appwrite/sdk-for-go/appwrite"
 	"github.com/appwrite/sdk-for-go/client"
 	"github.com/appwrite/sdk-for-go/models"
 	"github.com/appwrite/sdk-for-go/query"
+
 	"github.com/savsgio/atreugo/v11"
 )
 
 func CreateClientWithHeaders(ctx *atreugo.RequestCtx) (client.Client, bool) {
 	sessionToken := ctx.Request.Header.Peek("Authorization")
-
+	
 	if sessionToken == nil { return client.Client{}, false }
 	
 	return appwrite.NewClient(
@@ -19,6 +21,14 @@ func CreateClientWithHeaders(ctx *atreugo.RequestCtx) (client.Client, bool) {
 		appwrite.WithProject(os.Getenv("APPWRITE_PROJECT_ID")),
 		appwrite.WithSession(string(sessionToken)),
 	), true
+}
+
+func CreateClient() client.Client {
+	return appwrite.NewClient(
+		appwrite.WithEndpoint(os.Getenv("APPWRITE_API_ENDPOINT")),
+		appwrite.WithProject(os.Getenv("APPWRITE_PROJECT_ID")),
+		appwrite.WithKey(os.Getenv("APPWRITE_API_KEY")),
+	)
 }
 
 func GetUserByUsername(client *client.Client, username string) (models.User, int) {

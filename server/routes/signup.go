@@ -2,14 +2,14 @@ package routes
 
 import (
 	"encoding/json"
-	"os"
+	"server/utils"
 
 	"github.com/appwrite/sdk-for-go/appwrite"
 	"github.com/appwrite/sdk-for-go/id"
 	"github.com/appwrite/sdk-for-go/query"
 
 	"github.com/savsgio/atreugo/v11"
-	
+
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -29,11 +29,7 @@ func Signup(ctx *atreugo.RequestCtx) error {
 		}, 400)
 	}
 	
-	client := appwrite.NewClient(
-		appwrite.WithEndpoint(os.Getenv("APPWRITE_API_ENDPOINT")),
-		appwrite.WithProject(os.Getenv("APPWRITE_PROJECT_ID")),
-		appwrite.WithKey(os.Getenv("APPWRITE_API_KEY")),
-	)
+	client := utils.CreateClient()
 
 	database := appwrite.NewDatabases(client)
 

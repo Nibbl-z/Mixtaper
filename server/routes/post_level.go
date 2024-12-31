@@ -3,7 +3,7 @@ package routes
 import (
 	"encoding/json"
 	"server/utils"
-
+	
 	"github.com/appwrite/sdk-for-go/permission"
 	"github.com/appwrite/sdk-for-go/role"
 	"github.com/appwrite/sdk-for-go/appwrite"
@@ -27,9 +27,9 @@ func PostLevel(ctx *atreugo.RequestCtx) error {
 			"message": "Post data was not provided correctly",
 		}, 400)
 	}
-
+	
 	client, success := utils.CreateClientWithHeaders(ctx)
-
+	
 	if !success {
 		return ctx.JSONResponse(map[string]interface{}{
 			"successful" : false,

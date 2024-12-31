@@ -2,10 +2,8 @@ package routes
 
 import (
 	"encoding/json"
-	"os"
 	"regexp"
 
-	"github.com/appwrite/sdk-for-go/appwrite"
 	"github.com/appwrite/sdk-for-go/account"
 	"github.com/savsgio/atreugo/v11"
 
@@ -26,12 +24,8 @@ func Login(ctx *atreugo.RequestCtx) error {
 			"message": "Login data was not provided correctly",
 		}, 400)
 	}
-
-	client := appwrite.NewClient(
-		appwrite.WithEndpoint(os.Getenv("APPWRITE_API_ENDPOINT")),
-		appwrite.WithProject(os.Getenv("APPWRITE_PROJECT_ID")),
-		appwrite.WithKey(os.Getenv("APPWRITE_API_KEY")),
-	)
+	
+	client := utils.CreateClient()
 
 	var email string
 	
