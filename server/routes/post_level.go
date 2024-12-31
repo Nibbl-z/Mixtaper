@@ -20,7 +20,7 @@ type PostData struct {
 
 func PostLevel(ctx *atreugo.RequestCtx) error {
 	var postRequest PostData
-
+	
 	if err := json.Unmarshal(ctx.Request.Body(), &postRequest); err != nil {
 		return ctx.JSONResponse(map[string]interface{}{
 			"successful" : false,
@@ -65,11 +65,11 @@ func PostLevel(ctx *atreugo.RequestCtx) error {
 	if postRequest.Description != "" {
 		document["description"] = postRequest.Description
 	}
-
+	
 	if postRequest.ChartName != "" {
 		document["chartName"] = postRequest.ChartName
 	}
-
+	
 	_, err = database.CreateDocument(
 		"mixtaper",
 		"levels",

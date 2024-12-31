@@ -76,5 +76,5 @@ func Login(ctx *atreugo.RequestCtx) error {
 		"successful" : true,
 		"message": "Logged in successfully!",
 		"secret": session.Secret,
-	}, 400)
+	}, 200)
 }

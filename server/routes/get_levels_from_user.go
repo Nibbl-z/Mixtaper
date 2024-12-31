@@ -49,5 +49,5 @@ func GetLevelsFromUser(ctx *atreugo.RequestCtx) error {
 	return ctx.JSONResponse(map[string]interface{}{
 		"successful" : true,
 		"message": levelList.Documents,
-	})
+	}, 200)
 }

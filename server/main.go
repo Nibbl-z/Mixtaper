@@ -29,6 +29,8 @@ func main() {
     server.GET("/get_level", routes.GetLevel)
     server.GET("/get_levels_from_user", routes.GetLevelsFromUser)
     server.GET("/download_riq", routes.DownloadRiq)
+
+    server.POST("/edit_level", routes.EditLevel)
     
     server.POST("/send_email_verification", routes.SendEmailVerification)
     server.PUT("/verify_email", routes.VerifyEmail)

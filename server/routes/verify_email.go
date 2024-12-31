@@ -33,5 +33,5 @@ func VerifyEmail(ctx *atreugo.RequestCtx) error {
 	return ctx.JSONResponse(map[string]interface{}{
 		"successful" : true,
 		"message": "Verified successfully!",
-	})
+	}, 200)
 }

@@ -26,7 +26,7 @@ func GetLevel(ctx *atreugo.RequestCtx) error {
 	}
 
 	client := utils.CreateClient()
-
+	
 	database := appwrite.NewDatabases(client)
 
 	document, err := database.GetDocument(
