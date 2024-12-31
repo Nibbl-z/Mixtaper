@@ -2,7 +2,7 @@ package routes
 
 import (
 	"server/utils"
-
+	
 	"github.com/appwrite/sdk-for-go/appwrite"
 	"github.com/savsgio/atreugo/v11"
 )

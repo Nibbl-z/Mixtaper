@@ -37,6 +37,13 @@ func UploadRiq(ctx *atreugo.RequestCtx) error {
 			"message": "Failed to get user",
 		}, 500)
 	}
+
+	if !user.EmailVerification {
+		return ctx.JSONResponse(map[string]interface{}{
+			"successful" : false,
+			"message": "Please verify your email before posting!",
+		}, 400)
+	}
 	
 	os.Mkdir("uploads", fs.FileMode(0644))
 	

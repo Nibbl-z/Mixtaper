@@ -27,11 +27,12 @@ func main() {
     server.POST("/change_username", routes.ChangeUsername)
     
     server.GET("/get_level", routes.GetLevel)
+    server.GET("/get_levels_from_user", routes.GetLevelsFromUser)
     server.GET("/download_riq", routes.DownloadRiq)
     
     server.POST("/send_email_verification", routes.SendEmailVerification)
     server.PUT("/verify_email", routes.VerifyEmail)
-
+    
     server.UseBefore(func(ctx *atreugo.RequestCtx) error {
         corsAllowOrigin := string(ctx.URI().Scheme()) + "://" + string(ctx.Host())
         
