@@ -9,7 +9,7 @@ import (
 	"github.com/appwrite/sdk-for-go/query"
 
 	"github.com/savsgio/atreugo/v11"
-
+	
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -29,6 +29,20 @@ func Signup(ctx *atreugo.RequestCtx) error {
 		}, 400)
 	}
 	
+	if len(signupRequest.Username) > 20 {
+		return ctx.JSONResponse(map[string]interface{}{
+			"successful" : false,
+			"message": "Username must be less than 20 characters!",
+		}, 400)
+	}
+	
+	if len(signupRequest.Username) < 3 {
+		return ctx.JSONResponse(map[string]interface{}{
+			"successful" : false,
+			"message": "Username must be at least 3 characters long!",
+		}, 400)
+	}
+	
 	client := utils.CreateClient()
 
 	database := appwrite.NewDatabases(client)
@@ -43,7 +57,7 @@ func Signup(ctx *atreugo.RequestCtx) error {
 			"message": "Failed to fetch used usernames",
 		}, 500)
 	}
-
+	
 	if list.Total > 0 {
 		return ctx.JSONResponse(map[string]interface{}{
 			"successful" : false,

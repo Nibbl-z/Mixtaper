@@ -15,7 +15,14 @@ func ChangeUsername(ctx *atreugo.RequestCtx) error {
 			"message": "Username must be less than 20 characters!",
 		}, 400)
 	}
-
+	
+	if len(username) < 3 {
+		return ctx.JSONResponse(map[string]interface{}{
+			"successful" : false,
+			"message": "Username must be at least 3 characters long!",
+		}, 400)
+	}
+	
 	client := utils.CreateClient()
 	user_client, success := utils.CreateClientWithHeaders(ctx)
 
@@ -36,13 +43,6 @@ func ChangeUsername(ctx *atreugo.RequestCtx) error {
 	}
 	
 	database := appwrite.NewDatabases(client)
-
-	if err != nil {
-		return ctx.JSONResponse(map[string]interface{}{
-			"successful" : false,
-			"message": "Failed to get user",
-		}, 500)
-	}
 	
 	_, err = database.UpdateDocument(
 		"mixtaper",
