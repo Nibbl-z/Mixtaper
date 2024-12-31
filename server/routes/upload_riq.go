@@ -27,8 +27,10 @@ func UploadRiq(ctx *atreugo.RequestCtx) error {
 	if id == nil {
 		return utils.BadRespone(ctx, "Level ID is missing")
 	}
-
-	// TODO: check if level id is real
+	
+	if !utils.CheckLevelExists(string(id)) {
+		return utils.BadRespone(ctx, "Level doesn't exist")
+	}
 	
 	account_service := account.New(client)
 	
@@ -83,6 +85,6 @@ func UploadRiq(ctx *atreugo.RequestCtx) error {
 	if fileRemoveErr != nil {
 		return utils.ErrorResponse(ctx, "Failed to remove temp file from server", err)
 	}
-
+	
 	return utils.OkResponse(ctx, "Uploaded .riq successfully!")
 }

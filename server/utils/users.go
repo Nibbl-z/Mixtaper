@@ -2,7 +2,7 @@ package utils
 
 import (
 	"os"
-	
+
 	"github.com/appwrite/sdk-for-go/appwrite"
 	"github.com/appwrite/sdk-for-go/client"
 	"github.com/appwrite/sdk-for-go/models"
@@ -29,6 +29,20 @@ func CreateClient() client.Client {
 		appwrite.WithProject(os.Getenv("APPWRITE_PROJECT_ID")),
 		appwrite.WithKey(os.Getenv("APPWRITE_API_KEY")),
 	)
+}
+
+func CheckUserExists(id string) bool {
+	client := CreateClient()
+
+	users := appwrite.NewUsers(client)
+	
+	user, err := users.Get(id)
+	
+	if err != nil || user == nil {
+		return false
+	}
+	
+	return true
 }
 
 func GetUserByUsername(client *client.Client, username string) (models.User, int) {

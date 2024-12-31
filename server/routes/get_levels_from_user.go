@@ -21,6 +21,10 @@ func GetLevelsFromUser(ctx *atreugo.RequestCtx) error {
 		return utils.BadRespone(ctx, "User ID missing")
 	}
 	
+	if !utils.CheckUserExists(string(id)) {
+		return utils.BadRespone(ctx, "User doesn't exist")
+	}
+	
 	client := utils.CreateClient()
 	
 	database := appwrite.NewDatabases(client)

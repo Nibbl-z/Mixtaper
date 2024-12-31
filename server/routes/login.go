@@ -56,6 +56,6 @@ func Login(ctx *atreugo.RequestCtx) error {
 	if err != nil {
 		return utils.BadRespone(ctx, "Invalid credentials")
 	}
-
+	
 	return utils.OkPlusResponse(ctx, "Logged in successfully!", session.Secret, "secret")
 }
