@@ -40,6 +40,6 @@ func DeleteLevel(ctx *atreugo.RequestCtx) error {
 	if err != nil {
 		return utils.ErrorResponse(ctx, "Failed to delete RIQ", err)
 	}
-
+	
 	return utils.OkResponse(ctx, "Deleted level successfully!")
 }

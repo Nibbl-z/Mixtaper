@@ -1,10 +1,9 @@
 package routes
 
 import (
-	"fmt"
 	"io/fs"
 	"os"
-
+	
 	"server/utils"
 
 	"github.com/appwrite/sdk-for-go/account"
@@ -31,6 +30,10 @@ func UploadRiq(ctx *atreugo.RequestCtx) error {
 	if !utils.CheckLevelExists(string(id)) {
 		return utils.BadRespone(ctx, "Level doesn't exist")
 	}
+
+	if ctx.Request.Header.ContentLength() > 20 * 1000000 {
+		return utils.BadRespone(ctx, "File must be less than 20MB.")
+	}
 	
 	account_service := account.New(client)
 	
@@ -47,9 +50,8 @@ func UploadRiq(ctx *atreugo.RequestCtx) error {
 	os.Mkdir("uploads", fs.FileMode(0644))
 	
 	body := ctx.Request.Body()
-	fmt.Println(string(body))
-
-	path := "uploads/" + user.Id + ".riq"
+	
+	path := "uploads/" + string(id) + ".riq"
 
 	err = os.WriteFile(
 		path, 
@@ -57,8 +59,47 @@ func UploadRiq(ctx *atreugo.RequestCtx) error {
 		fs.FileMode(0644),
 	)
 
+	
+
 	if err != nil {
 		return utils.ErrorResponse(ctx, "Failed to create temp upload file", err)
+	}
+
+	// Check RIQ file to be valid
+
+	if err = utils.CheckRiq(path); err != nil {
+		return utils.BadRespone(ctx, ".riq file is invalid!")
+	}
+	
+	remixData, err := utils.GetRemixData(path)
+	if err != nil {
+		return utils.ErrorResponse(ctx, "Failed to decode .riq", err)
+	}
+
+	storage := appwrite.NewStorage(client)
+	
+	_, err = storage.GetFile("riq_files", string(id))
+	
+	if err == nil {
+		return utils.BadRespone(ctx, ".riq file already exists")
+	}
+	
+	database := appwrite.NewDatabases(client)
+	
+	document := map[string]interface{}{
+		"bpm" : utils.GetBPM(remixData),
+		"gamesUsed" : utils.GetGames(remixData),
+	}
+
+	_, err = database.UpdateDocument(
+		"mixtaper",
+		"levels",
+		string(id),
+		database.WithUpdateDocumentData(document),
+	)
+
+	if err != nil {
+		return utils.ErrorResponse(ctx, "Failed to add .riq data to database", err)
 	}
 	
 	permissions := []string{
@@ -66,16 +107,14 @@ func UploadRiq(ctx *atreugo.RequestCtx) error {
 		permission.Update(role.User(user.Id, "")),
 		permission.Delete(role.User(user.Id, "")),
 	}
-	
-	storage := appwrite.NewStorage(client)
-	
+
 	_, err = storage.CreateFile(
 		"riq_files",
 		string(id),
-		file.NewInputFile(path, user.Id + ".riq"),
+		file.NewInputFile(path, string(id) + ".riq"),
 		storage.WithCreateFilePermissions(permissions),
 	)
-
+	
 	if err != nil {
 		return utils.ErrorResponse(ctx, "Failed to upload .riq to server", err)
 	}
