@@ -7,13 +7,7 @@ import (
 	"github.com/savsgio/atreugo/v11"
 )
 
-type Level struct {
-	SongName string `json:"songName"`
-	SongArtist string `json:"songArtist"`
-	ChartName string `json:"chartName,omitempty"`
-	Description string `json:"description,omitempty"`
-	Uploader string `json:"uploader"`
-}
+
 
 func GetLevel(ctx *atreugo.RequestCtx) error {
 	id := ctx.Request.Body()
@@ -36,7 +30,7 @@ func GetLevel(ctx *atreugo.RequestCtx) error {
 		return utils.ErrorResponse(ctx, "Failed to get level", err)
 	}
 	
-	var level Level 
+	var level utils.Level 
 	err = document.Decode(&level)
 	
 	if err != nil {

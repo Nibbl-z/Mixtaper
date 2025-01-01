@@ -22,19 +22,20 @@ func main() {
     
     server.POST("/signup", routes.Signup)
     server.POST("/login", routes.Login)
-    server.POST("/upload_riq", routes.UploadRiq)
-    server.POST("/post_level", routes.PostLevel)
     server.POST("/change_username", routes.ChangeUsername)
-    
-    server.GET("/get_level", routes.GetLevel)
-    server.GET("/get_levels_from_user", routes.GetLevelsFromUser)
-    server.GET("/download_riq", routes.DownloadRiq)
-
-    server.POST("/edit_level", routes.EditLevel)
-    server.POST("/delete_level", routes.DeleteLevel)
     
     server.POST("/send_email_verification", routes.SendEmailVerification)
     server.PUT("/verify_email", routes.VerifyEmail)
+
+    server.GET("/get_level", routes.GetLevel)
+    server.GET("/get_levels_from_user", routes.GetLevelsFromUser)
+    server.GET("/download_riq", routes.DownloadRiq)
+    server.GET("/search", routes.Search)
+
+    server.POST("/upload_riq", routes.UploadRiq)
+    server.POST("/post_level", routes.PostLevel)
+    server.POST("/edit_level", routes.EditLevel)
+    server.POST("/delete_level", routes.DeleteLevel)
     
     server.UseBefore(func(ctx *atreugo.RequestCtx) error {
         corsAllowOrigin := string(ctx.URI().Scheme()) + "://" + string(ctx.Host())

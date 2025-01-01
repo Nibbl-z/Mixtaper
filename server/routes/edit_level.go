@@ -8,16 +8,8 @@ import (
 	"server/utils"
 )
 
-type EditPostData struct {
-	SongName string `json:"songName"`
-	SongArtist string `json:"songArtist"`
-	ChartName string `json:"chartName,omitempty"`
-	Description string `json:"description,omitempty"`
-	ID string `json:"id"`
-}
-
 func EditLevel(ctx *atreugo.RequestCtx) error {
-	var editRequest EditPostData
+	var editRequest utils.EditPostData
 	
 	if err := json.Unmarshal(ctx.Request.Body(), &editRequest); err != nil {
 		return utils.BadRespone(ctx, "Post data was not provided correctly")
