@@ -66,7 +66,7 @@ func UploadRiq(ctx *atreugo.RequestCtx) error {
 	}
 
 	// Check RIQ file to be valid
-
+	
 	if err = utils.CheckRiq(path); err != nil {
 		return utils.BadRespone(ctx, ".riq file is invalid!")
 	}
@@ -75,9 +75,9 @@ func UploadRiq(ctx *atreugo.RequestCtx) error {
 	if err != nil {
 		return utils.ErrorResponse(ctx, "Failed to decode .riq", err)
 	}
-
-	storage := appwrite.NewStorage(client)
 	
+	storage := appwrite.NewStorage(client)
+
 	_, err = storage.GetFile("riq_files", string(id))
 	
 	if err == nil {
