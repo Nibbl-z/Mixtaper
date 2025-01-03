@@ -12,9 +12,16 @@ export default {
 				interactable: '#B87EFF',
 				author: '#d3d3d3',
 				description: '#cacaca'
+			},
+			fontFamily: {
+				Itim: ['Itim', 'sans-serif']
+			},
+			screens: {
+				'2cols' : '1600px'
 			}
 		}
 	},
 
-	plugins: []
+	plugins: [
+	]
 } satisfies Config;
