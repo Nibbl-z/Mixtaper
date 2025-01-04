@@ -8,6 +8,7 @@ export default {
 			colors: {
 				background: '#262329',
 				topbar: '#463F61',
+				topbarHover: '#2c283d',
 				item: '#2A243F',
 				interactable: '#B87EFF',
 				author: '#d3d3d3',

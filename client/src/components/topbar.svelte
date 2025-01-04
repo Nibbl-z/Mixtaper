@@ -10,8 +10,14 @@
             <img src="/upload.png" class="text-[#FFFFFF] h-[70%] hover:brightness-75" alt="Account"/>
         </a>
         
-        <a href="/" class="h-[100%] flex items-center">
-            <img src="/account.png" class="text-[#FFFFFF] h-[70%] hover:brightness-75" alt="Account"/>
-        </a>
+        <div class="relative h-[100%] group">
+            <a href="/" class="h-[100%] flex items-center">
+                <img src="/account.png" class="text-[#FFFFFF] h-[70%] hover:brightness-75" alt="Account"/>
+            </a>
+            <div class="flex flex-col text-center opacity-0 absolute right-0 bg-topbar group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto">
+                <a class="text-3xl hover:bg-topbarHover p-4" href="/signup">Signup</a>
+                <a class="text-3xl hover:bg-topbarHover p-4" href="/login">Login</a>
+            </div>
+        </div>
     </div>
 </div>
