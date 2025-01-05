@@ -19,7 +19,7 @@
         <Field id="riq" file fileTitle="Drag and drop or select .riq file to upload" fileMaxSize={20}/>
 
         <p class="w-full text-center text-2xl">Upload Status Message!</p>
-
+        
         <div class="flex items-center justify-center">
             <button class="rounded-2xl bg-interactable text-[#FFFFFF] w-[20%] text-2xl p-2 mt-auto">Post</button>
         </div>

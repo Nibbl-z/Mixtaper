@@ -7,7 +7,7 @@
 
     export let fileTitle: string = ""
     export let fileMaxSize: number = 0
-
+    
     let width: string = label == "" ? "100%" : "70%"
 </script>
 
