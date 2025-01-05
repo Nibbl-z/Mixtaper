@@ -1,6 +1,30 @@
 <script lang="ts">
     import Topbar from "../components/topbar.svelte";
     import Level from "../components/level.svelte"
+
+    import type { LevelData, SearchResult } from "$lib/Types";
+	import { onMount } from "svelte";
+
+    let results: LevelData[] = [];
+    
+    async function getResults() {
+        const response = await fetch("http://localhost:2050/recent_levels", {
+            method: "GET",
+            headers: {
+                "Origin": "http://localhost:5173"
+            },
+        })
+
+        if (response.ok) {
+            const data: SearchResult = await response.json()
+        
+            results = data.message
+        }
+    }
+    
+    onMount(() =>{
+        getResults()
+    })
 </script>
 
 <Topbar/>
@@ -16,10 +40,16 @@
         <a href="/" class="text-right text-3xl">Show More &gt;</a>
     </div>
     <div class="width-[100em] grid grid-cols-1 2cols:grid-cols-2 justify-items-center gap-8 my-4">
-        <Level songName="Awesome Sauce" songArtist="Josh, obviously" cover="/PLACEHOLDER.png"/>
-        <Level songName="Awesome Sauceaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" songArtist="Josh, obviously" cover="/PLACEHOLDER.png"/>
-        <Level songName="I Hate CSS" songArtist="Josh, obviously" cover="/PLACEHOLDER.png"/>
-        <Level songName="we should rewrite the web in lua tbh" songArtist="Josh, obviously" cover="/PLACEHOLDER.png"/>
+        {#each results as level}
+            <Level 
+            songName={level.songName} 
+            songArtist={level.songArtist} 
+            cover="/PLACEHOLDER.png" 
+            gamesUsed={level.gamesUsed} 
+            bpm={level.bpm} 
+            duration="1:20"
+            />
+        {/each}
     </div>    
 </div>
 

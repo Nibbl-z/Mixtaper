@@ -3,7 +3,7 @@ package routes
 import (
 	"fmt"
 	"server/utils"
-
+	
 	"github.com/appwrite/sdk-for-go/appwrite"
 	"github.com/appwrite/sdk-for-go/query"
 	"github.com/savsgio/atreugo/v11"
@@ -15,7 +15,7 @@ func Search(ctx *atreugo.RequestCtx) error {
 	if string(searchQuery) == "" {
 		return utils.BadRespone(ctx, "Search query missing")
 	}
-
+	
 	client := utils.CreateClient()
 	database := appwrite.NewDatabases(client)
 	fmt.Println(searchQuery)
@@ -33,7 +33,7 @@ func Search(ctx *atreugo.RequestCtx) error {
 			},
 		),
 	)
-
+	
 	if err != nil {
 		return utils.ErrorResponse(ctx, "Failed to search for levels", err)
 	}

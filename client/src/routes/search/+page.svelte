@@ -47,7 +47,14 @@
 <div class="flex items-center justify-center flex-col">
     <div class="width-[100em] grid grid-cols-1 2cols:grid-cols-2 justify-items-center gap-8">
         {#each results as level}
-            <Level songName={level.songName} songArtist={level.songArtist} cover="/PLACEHOLDER.png"/>
+            <Level 
+            songName={level.songName} 
+            songArtist={level.songArtist} 
+            cover="/PLACEHOLDER.png" 
+            gamesUsed={level.gamesUsed} 
+            bpm={level.bpm} 
+            duration="1:20"
+            />
         {/each}
     </div>    
 </div>

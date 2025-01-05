@@ -3,6 +3,8 @@ export interface LevelData {
     songArtist: string,
     description: string,
     uploader: string
+    bpm: number,
+    gamesUsed: string[]
 }
 
 export interface SearchResult {

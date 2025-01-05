@@ -22,6 +22,8 @@ type Level struct {
 	SongArtist string `json:"songArtist"`
 	ChartName string `json:"chartName,omitempty"`
 	Description string `json:"description,omitempty"`
+	BPM float64 `json:"bpm,omitempty"`
+	GamesUsed []string `json:"gamesUsed,omitempty"`
 	Uploader string `json:"uploader"`
 }
 

@@ -24,7 +24,7 @@ func main() {
         ctx.Response.Header.Set("Access-Control-Allow-Credentials", "true")
         return ctx.TextResponse("", 204)
     })
-
+    
     server.UseBefore(func(ctx *atreugo.RequestCtx) error {
         ctx.Response.Header.Set("Access-Control-Allow-Origin", "http://localhost:5173")
         ctx.Response.Header.Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
@@ -54,6 +54,8 @@ func main() {
     server.POST("/post_level", routes.PostLevel)
     server.POST("/edit_level", routes.EditLevel)
     server.POST("/delete_level", routes.DeleteLevel)
+
+    server.GET("/recent_levels", routes.RecentLevels)
     
     if err := server.ListenAndServe(); err != nil {
         panic(err)
