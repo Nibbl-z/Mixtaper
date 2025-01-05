@@ -11,3 +11,14 @@ export interface LevelData {
 export interface SearchResult {
     message: LevelData[]
 }
+
+export interface MessageResult {
+    message: string
+    successful: boolean
+}
+
+export interface LoginResult {
+    message: string
+    successful: boolean
+    secret?: string
+}
