@@ -30,7 +30,7 @@ func UploadRiq(ctx *atreugo.RequestCtx) error {
 	if !utils.CheckLevelExists(string(id)) {
 		return utils.BadRespone(ctx, "Level doesn't exist")
 	}
-
+	
 	if ctx.Request.Header.ContentLength() > 20 * 1000000 {
 		return utils.BadRespone(ctx, "File must be less than 20MB.")
 	}
@@ -52,14 +52,20 @@ func UploadRiq(ctx *atreugo.RequestCtx) error {
 	body := ctx.Request.Body()
 	
 	path := "uploads/" + string(id) + ".riq"
+	
+	storage := appwrite.NewStorage(client)
+	
+	_, err = storage.GetFile("riq_files", string(id))
+	
+	if err == nil {
+		return utils.BadRespone(ctx, ".riq file already exists")
+	}
 
 	err = os.WriteFile(
 		path, 
 		body,
 		fs.FileMode(0644),
 	)
-
-	
 
 	if err != nil {
 		return utils.ErrorResponse(ctx, "Failed to create temp upload file", err)
@@ -68,20 +74,24 @@ func UploadRiq(ctx *atreugo.RequestCtx) error {
 	// Check RIQ file to be valid
 	
 	if err = utils.CheckRiq(path); err != nil {
+		fileRemoveErr := os.Remove(path)
+	
+		if fileRemoveErr != nil {
+			return utils.ErrorResponse(ctx, "Failed to remove temp file from server", err)
+		}
+
 		return utils.BadRespone(ctx, ".riq file is invalid!")
 	}
 	
 	remixData, err := utils.GetRemixData(path)
 	if err != nil {
+		fileRemoveErr := os.Remove(path)
+	
+		if fileRemoveErr != nil {
+			return utils.ErrorResponse(ctx, "Failed to remove temp file from server", err)
+		}
+		
 		return utils.ErrorResponse(ctx, "Failed to decode .riq", err)
-	}
-	
-	storage := appwrite.NewStorage(client)
-
-	_, err = storage.GetFile("riq_files", string(id))
-	
-	if err == nil {
-		return utils.BadRespone(ctx, ".riq file already exists")
 	}
 	
 	database := appwrite.NewDatabases(client)
@@ -118,9 +128,9 @@ func UploadRiq(ctx *atreugo.RequestCtx) error {
 	if err != nil {
 		return utils.ErrorResponse(ctx, "Failed to upload .riq to server", err)
 	}
-
+	
 	fileRemoveErr := os.Remove(path)
-
+	
 	if fileRemoveErr != nil {
 		return utils.ErrorResponse(ctx, "Failed to remove temp file from server", err)
 	}

@@ -49,12 +49,13 @@ func main() {
     server.GET("/get_levels_from_user", routes.GetLevelsFromUser)
     server.GET("/download_riq", routes.DownloadRiq)
     server.POST("/search", routes.Search)
-
+    
     server.POST("/upload_riq", routes.UploadRiq)
+    server.POST("/upload_cover_art", routes.UploadCoverArt)
     server.POST("/post_level", routes.PostLevel)
     server.POST("/edit_level", routes.EditLevel)
     server.POST("/delete_level", routes.DeleteLevel)
-
+    
     server.GET("/recent_levels", routes.RecentLevels)
     
     if err := server.ListenAndServe(); err != nil {

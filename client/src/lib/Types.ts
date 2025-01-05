@@ -4,7 +4,8 @@ export interface LevelData {
     description: string,
     uploader: string
     bpm: number,
-    gamesUsed: string[]
+    gamesUsed: string[],
+    $id: string
 }
 
 export interface SearchResult {

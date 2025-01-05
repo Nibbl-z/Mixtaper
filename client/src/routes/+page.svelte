@@ -44,7 +44,7 @@
             <Level 
             songName={level.songName} 
             songArtist={level.songArtist} 
-            cover="/PLACEHOLDER.png" 
+            cover="https://cloud.appwrite.io/v1/storage/buckets/cover_art/files/{level.$id}/view?project=676f205d000370a15786&project=676f205d000370a15786" 
             gamesUsed={level.gamesUsed} 
             bpm={level.bpm} 
             duration="1:20"

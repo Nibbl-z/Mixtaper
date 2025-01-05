@@ -13,7 +13,7 @@
         <Field label="Song Artist" id="songArtist" required/>
         <Field label="Chart Name" id="chartName" />
         <Field label="Description" id="description" big/>
-        <Field label="Cover Art" id="coverArt" file fileTitle="Drag and drop or select .png/.jpg file to upload" fileMaxSize={1}/>
+        <Field label="Cover Art" id="coverArt" file fileTitle="Drag and drop or select .png/.jpg file to upload" fileMaxSize={5}/>
         <Field label="YouTube Video" id="video" />
         <div class="my-8"></div>
         <Field id="riq" file fileTitle="Drag and drop or select .riq file to upload" fileMaxSize={20}/>
