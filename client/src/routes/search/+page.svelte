@@ -3,22 +3,51 @@
     import Level from "../../components/level.svelte"
 
     export let query: string
-    export let results: number
-    query = "Awesome Levels"
-    results = 100000
+    export let resultsCount: number
+    query = "nibbles"
+    resultsCount = 100000
+
+    import type { LevelData, SearchResult } from "$lib/Types";
+	import { onMount } from "svelte";
+
+    let results: LevelData[] = [];
+    
+    async function getResults() {
+        const response = await fetch("http://localhost:2050/search", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Origin": "http://localhost:5173"
+            },
+            body: query
+        })
+
+        if (response.ok) {
+            const data: SearchResult = await response.json()
+        
+            results = data.message
+            resultsCount = results.length
+            console.log(results)
+        }
+    }
+    
+    onMount(() =>{
+        getResults()
+    })
+    
 </script>
 
 <Topbar/>
 
 <div class="my-2 ml-8 p-[4rem]">
-    <h1 class="text-4xl">Showing {results} results for {query}</h1>
+    <h1 class="text-4xl">Showing {resultsCount} results for {query}</h1>
 </div>
 
 <div class="flex items-center justify-center flex-col">
     <div class="width-[100em] grid grid-cols-1 2cols:grid-cols-2 justify-items-center gap-8">
-        <Level songName="Awesome Sauce" songArtist="Josh, obviously" cover="/PLACEHOLDER.png"/>
-        <Level songName="Awesome Sauceaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" songArtist="Josh, obviously" cover="/PLACEHOLDER.png"/>
-        <Level songName="I Hate CSS" songArtist="Josh, obviously" cover="/PLACEHOLDER.png"/>
-        <Level songName="we should rewrite the web in lua tbh" songArtist="Josh, obviously" cover="/PLACEHOLDER.png"/>
+        {#each results as level}
+            <Level songName={level.songName} songArtist={level.songArtist} cover="/PLACEHOLDER.png"/>
+        {/each}
     </div>    
 </div>

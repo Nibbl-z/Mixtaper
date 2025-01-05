@@ -1,9 +1,10 @@
 package main
 
 import (
-    "github.com/joho/godotenv"
-    "github.com/savsgio/atreugo/v11"
-    "server/routes"
+	"server/routes"
+	
+	"github.com/joho/godotenv"
+	"github.com/savsgio/atreugo/v11"
 )
 
 func main() {
@@ -13,11 +14,28 @@ func main() {
 		panic(err)
 	}
 	
-	config := atreugo.Config{Addr: "localhost:2050"}
+	config := atreugo.Config{Addr: "localhost:2050", NoDefaultServerHeader: true,}
     server := atreugo.New(config)
     
+    server.OPTIONS("/*", func(ctx *atreugo.RequestCtx) error {
+        ctx.Response.Header.Set("Access-Control-Allow-Origin", "http://localhost:5173")
+        ctx.Response.Header.Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+        ctx.Response.Header.Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+        ctx.Response.Header.Set("Access-Control-Allow-Credentials", "true")
+        return ctx.TextResponse("", 204)
+    })
+
+    server.UseBefore(func(ctx *atreugo.RequestCtx) error {
+        ctx.Response.Header.Set("Access-Control-Allow-Origin", "http://localhost:5173")
+        ctx.Response.Header.Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+        ctx.Response.Header.Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+        ctx.Response.Header.Set("Access-Control-Allow-Credentials", "true")
+        
+        return ctx.Next()
+    })
+    
     server.GET("/", func(ctx *atreugo.RequestCtx) error {
-        return ctx.TextResponse("Hai!")
+        return ctx.JSONResponse(atreugo.JSON{"Method": "GET"})
     })
     
     server.POST("/signup", routes.Signup)
@@ -30,20 +48,12 @@ func main() {
     server.GET("/get_level", routes.GetLevel)
     server.GET("/get_levels_from_user", routes.GetLevelsFromUser)
     server.GET("/download_riq", routes.DownloadRiq)
-    server.GET("/search", routes.Search)
+    server.POST("/search", routes.Search)
 
     server.POST("/upload_riq", routes.UploadRiq)
     server.POST("/post_level", routes.PostLevel)
     server.POST("/edit_level", routes.EditLevel)
     server.POST("/delete_level", routes.DeleteLevel)
-    
-    server.UseBefore(func(ctx *atreugo.RequestCtx) error {
-        corsAllowOrigin := string(ctx.URI().Scheme()) + "://" + string(ctx.Host())
-        
-        ctx.Response.Header.Set("Access-Control-Allow-Origin", corsAllowOrigin)
-
-        return ctx.Next()
-    })
     
     if err := server.ListenAndServe(); err != nil {
         panic(err)
