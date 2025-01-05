@@ -1,6 +1,6 @@
 <script lang="ts">
     import Topbar from "../../components/topbar.svelte";
-    import type { LoginResult } from "$lib/Types"
+    import type { LoginResult, MessageResult } from "$lib/Types"
 
     let identifierField: HTMLInputElement
     let passwordField: HTMLInputElement
@@ -18,16 +18,26 @@
         })
         
         const data: LoginResult = await response.json()
-        
+        result = data.message
         if (data.successful) {
             resultColor = "resultSuccess"
-
             document.cookie = `token=${data.secret}; path=/;`
         } else {
             resultColor = "resultError"
+            return
         }
+
+        const verifyResponse = await fetch("http://localhost:2050/send_email_verification", {
+            method : "POST",
+            headers : {
+                "Authorization" : data.secret || ""
+            }
+        })
         
-        result = data.message
+        const verifyData: MessageResult = await response.json()
+        if (verifyData.successful) {
+            console.log(verifyData.message)
+        }
     }
 </script>
 

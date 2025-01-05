@@ -9,7 +9,7 @@ import (
 func VerifyEmail(ctx *atreugo.RequestCtx) error {
 	userId := string(ctx.QueryArgs().Peek("userId"))
 	secret := string(ctx.QueryArgs().Peek("secret"))
-
+	
 	client, success := utils.CreateClientWithHeaders(ctx)
 
 	if !success {
