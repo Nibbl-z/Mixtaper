@@ -22,3 +22,9 @@ export interface LoginResult {
     successful: boolean
     secret?: string
 }
+
+export interface PostResult {
+    message: string
+    successful: boolean
+    id?: string
+}

@@ -44,9 +44,17 @@ func GetBPM(data map[string]interface{}) float64 {
 	if data["bpm"] != nil {
 		return data["bpm"].(float64)
 	}
+
+	tempoChanges := data["tempoChanges"].([]interface{})
 	
-	if len(data["tempoChanges"].([]map[string]interface{})) >= 1 {
-		return data["tempoChanges"].([]map[string]interface{})[0]["tempo"].(float64) // Erm what the go
+	if len(tempoChanges) >= 1 {
+		if tempoChanges[0].(map[string]interface{})["tempo"] != nil {
+			return tempoChanges[0].(map[string]interface{})["tempo"].(float64)
+		}
+		
+		dynamicData := tempoChanges[0].(map[string]interface{})["dynamicData"].(map[string]interface{})
+		
+		return dynamicData["tempo"].(float64)
 	}
 	
 	return 0.0

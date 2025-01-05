@@ -14,21 +14,21 @@ func main() {
 		panic(err)
 	}
 	
-	config := atreugo.Config{Addr: "localhost:2050", NoDefaultServerHeader: true,}
+	config := atreugo.Config{Addr: "localhost:2050", NoDefaultServerHeader: true, MaxRequestBodySize: 20 * 1024 * 1024}
     server := atreugo.New(config)
     
     server.OPTIONS("/*", func(ctx *atreugo.RequestCtx) error {
-        ctx.Response.Header.Set("Access-Control-Allow-Origin", "http://localhost:5173")
+        ctx.Response.Header.Set("Access-Control-Allow-Origin", "*")
         ctx.Response.Header.Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-        ctx.Response.Header.Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+        ctx.Response.Header.Set("Access-Control-Allow-Headers", "Content-Type, Authorization, ID")
         ctx.Response.Header.Set("Access-Control-Allow-Credentials", "true")
         return ctx.TextResponse("", 204)
     })
     
     server.UseBefore(func(ctx *atreugo.RequestCtx) error {
-        ctx.Response.Header.Set("Access-Control-Allow-Origin", "http://localhost:5173")
+        ctx.Response.Header.Set("Access-Control-Allow-Origin", "*")
         ctx.Response.Header.Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-        ctx.Response.Header.Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+        ctx.Response.Header.Set("Access-Control-Allow-Headers", "Content-Type, Authorization, ID")
         ctx.Response.Header.Set("Access-Control-Allow-Credentials", "true")
         
         return ctx.Next()
