@@ -18,7 +18,7 @@ func main() {
     server := atreugo.New(config)
     
     server.OPTIONS("/*", func(ctx *atreugo.RequestCtx) error {
-        ctx.Response.Header.Set("Access-Control-Allow-Origin", "*")
+        ctx.Response.Header.Set("Access-Control-Allow-Origin", "http://localhost:5173")
         ctx.Response.Header.Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
         ctx.Response.Header.Set("Access-Control-Allow-Headers", "Content-Type, Authorization, ID")
         ctx.Response.Header.Set("Access-Control-Allow-Credentials", "true")
@@ -26,7 +26,7 @@ func main() {
     })
     
     server.UseBefore(func(ctx *atreugo.RequestCtx) error {
-        ctx.Response.Header.Set("Access-Control-Allow-Origin", "*")
+        ctx.Response.Header.Set("Access-Control-Allow-Origin", "http://localhost:5173")
         ctx.Response.Header.Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
         ctx.Response.Header.Set("Access-Control-Allow-Headers", "Content-Type, Authorization, ID")
         ctx.Response.Header.Set("Access-Control-Allow-Credentials", "true")
@@ -48,7 +48,7 @@ func main() {
     server.GET("/get_level", routes.GetLevel)
     server.GET("/get_levels_from_user", routes.GetLevelsFromUser)
     server.GET("/download_riq", routes.DownloadRiq)
-    server.POST("/search", routes.Search)
+    server.GET("/search", routes.Search)
     
     server.POST("/upload_riq", routes.UploadRiq)
     server.POST("/upload_cover_art", routes.UploadCoverArt)

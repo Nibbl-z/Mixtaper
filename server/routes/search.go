@@ -10,7 +10,7 @@ import (
 )
 
 func Search(ctx *atreugo.RequestCtx) error {
-	searchQuery := ctx.Request.Body()
+	searchQuery := string(ctx.QueryArgs().Peek("query"))
 	
 	if string(searchQuery) == "" {
 		return utils.BadRespone(ctx, "Search query missing")

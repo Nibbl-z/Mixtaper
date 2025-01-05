@@ -1,28 +1,31 @@
 <script lang="ts">
 	import Topbar from "../../components/topbar.svelte"
     import Level from "../../components/level.svelte"
-
+    import { page } from '$app/stores';
     export let query: string
     export let resultsCount: number
-    query = "nibbles"
-    resultsCount = 100000
+    query = $page.url.searchParams.get('query') || '';
+    resultsCount = 0
 
     import type { LevelData, SearchResult } from "$lib/Types";
 	import { onMount } from "svelte";
-
+    
     let results: LevelData[] = [];
     
     async function getResults() {
-        const response = await fetch("http://localhost:2050/search", {
-            method: "POST",
+        const params = new URLSearchParams({
+            query: query
+        })
+        
+        const response = await fetch(`http://localhost:2050/search?${params.toString()}`, {
+            method: "GET",
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json",
                 "Origin": "http://localhost:5173"
-            },
-            body: query
+            }
         })
-
+        
         if (response.ok) {
             const data: SearchResult = await response.json()
         

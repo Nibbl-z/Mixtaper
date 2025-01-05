@@ -39,7 +39,7 @@
 
 <div class="w-[50em] h-[15em]">
     <div class="bg-item p-3 w-[50em] h-[15em] rounded-3xl flex items-left shadow-2xl">
-        <img src={cover} alt="Cover Art" class="h-[100%] rounded-xl shadow-2xl">
+        <img src={cover != "" ? cover : "/PLACEHOLDER.png"} alt="Cover Art" class="h-[100%] rounded-xl shadow-2xl">
         <div class="mx-5 flex flex-col space-y-[-0.2em]">
             <h1 class="text-[2em] leading-[125%]">{songName}</h1>        
             <h1 class="text-[1.5em] text-author truncate">{songArtist}</h1>

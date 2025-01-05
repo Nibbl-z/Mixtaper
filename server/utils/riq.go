@@ -95,7 +95,7 @@ func GetRemixData(path string) (map[string]interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-
+	
 	defer reader.Close()
 	
 	var remixBytes []byte

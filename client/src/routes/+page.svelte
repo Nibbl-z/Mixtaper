@@ -7,6 +7,8 @@
 
     let results: LevelData[] = [];
     
+    let covers: Record<string, string> = {}
+
     async function getResults() {
         const response = await fetch("http://localhost:2050/recent_levels", {
             method: "GET",
@@ -17,9 +19,28 @@
 
         if (response.ok) {
             const data: SearchResult = await response.json()
-        
             results = data.message
+            
+            const coverPromises = results.map(result => {
+                const coverUrl = `https://cloud.appwrite.io/v1/storage/buckets/cover_art/files/${result.$id}/view?project=676f205d000370a15786&project=676f205d000370a15786`
+                return checkCoverArt(coverUrl).then(exists => ({
+                    id: result.$id,
+                    url: exists ? coverUrl : "/PLACEHOLDER.png"
+                }))
+            })
+
+            const loadedCovers = await Promise.all(coverPromises)
+            covers = loadedCovers.reduce((acc: Record<string, string>, cover) => {
+                acc[cover.id] = cover.url
+                return acc
+            }, {})
         }
+    }
+
+    async function checkCoverArt(url: string): Promise<boolean> {
+        const response = await fetch(url)
+        
+        return response.ok
     }
     
     onMount(() =>{
@@ -44,7 +65,7 @@
             <Level 
             songName={level.songName} 
             songArtist={level.songArtist} 
-            cover="https://cloud.appwrite.io/v1/storage/buckets/cover_art/files/{level.$id}/view?project=676f205d000370a15786&project=676f205d000370a15786" 
+            cover={covers[level.$id]}
             gamesUsed={level.gamesUsed} 
             bpm={level.bpm} 
             duration="1:20"
