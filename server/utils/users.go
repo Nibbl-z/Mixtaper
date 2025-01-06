@@ -11,6 +11,21 @@ import (
 	"github.com/savsgio/atreugo/v11"
 )
 
+type User struct {
+	Username string
+	DisplayName string
+	ID string
+}
+
+type Username struct {
+	Username string `json:"username"`
+}
+
+type UsernameList struct {
+	*models.DocumentList
+	Documents []Username `json:"documents"`
+}
+
 func CreateClientWithHeaders(ctx *atreugo.RequestCtx) (client.Client, bool) {
 	sessionToken := ctx.Request.Header.Peek("Authorization")
 	
@@ -58,7 +73,7 @@ func GetUserByUsername(client *client.Client, username string) (models.User, int
 	}
 
 	if list.Total == 0 {
-		return models.User{},400
+		return models.User{}, 400
 	}
 
 	user, err := users.Get(list.Documents[0].Id)
@@ -68,4 +83,23 @@ func GetUserByUsername(client *client.Client, username string) (models.User, int
 	}
 	
 	return *user, 200
+}
+
+func GetUsernameByID(client *client.Client, id string) (string, error) {
+	database := appwrite.NewDatabases(*client)
+	
+	document, err := database.GetDocument("mixtaper", "usernames", id)
+
+	if err != nil {
+		return "", err
+	}
+	
+	var username Username
+	err = document.Decode(&username)
+	
+	if err != nil {
+		return "", err
+	}
+
+	return username.Username, nil
 }

@@ -26,6 +26,7 @@ type Level struct {
 	GamesUsed []string `json:"gamesUsed,omitempty"`
 	Uploader string `json:"uploader"`
 	ID string `json:"$id"`
+	UploadDate string `json:"$createdAt"`
 }
 
 func CheckLevelExists(id string) bool {

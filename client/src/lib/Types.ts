@@ -5,7 +5,14 @@ export interface LevelData {
     uploader: string
     bpm: number,
     gamesUsed: string[],
-    $id: string
+    $id: string,
+    $createdAt: string
+}
+
+export interface UserData {
+    Username: string,
+    DisplayName: string,
+    ID: string
 }
 
 export interface SearchResult {
@@ -23,8 +30,18 @@ export interface LoginResult {
     secret?: string
 }
 
+export interface GetLevelResult {
+    message: LevelData
+    successful: boolean
+}
+
 export interface PostResult {
     message: string
     successful: boolean
     id?: string
+}
+
+export interface GetUserResult {
+    message: UserData,
+    successful: boolean
 }

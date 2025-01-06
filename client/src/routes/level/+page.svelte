@@ -2,15 +2,59 @@
     import Topbar from "../../components/topbar.svelte";
     import Stat from "./stat.svelte";
     import Chip from "../../components/chip.svelte";
-    export let songName: string
-    export let songArtist: string
-    export let cover: string
-    export let description: string
+	import { page } from "$app/stores";
+	import type { GetLevelResult, GetUserResult } from "$lib/Types";
+	import { onMount } from "svelte";
+    let songName: string
+    let songArtist: string
+    let cover: string
+    let description: string
+
+    let bpm: string
+    let author: string
+    let uploadDate: string
 
     songName = "Awesome Song"
     songArtist = "Awesome Artist"
     description = "Even more amazing description. Did I ever mention my extreme dislike for CSS?"
     cover = "/PLACEHOLDER.png"
+
+    let id = $page.url.searchParams.get('id') || '';
+
+    async function load() {
+        const params = new URLSearchParams({
+            id: id
+        })
+        
+        const response = await fetch(`http://localhost:2050/get_level?${params.toString()}`, {
+            method: "GET",
+            headers: {
+                "Origin": "http://localhost:5173"
+            },
+        })
+
+        const data: GetLevelResult = await response.json()
+        
+        if (response.ok && data.successful) {
+            songName = data.message.songName
+            songArtist = data.message.songArtist
+            description = data.message.description
+            bpm = data.message.bpm.toString()
+            uploadDate = data.message.$createdAt
+        }
+
+        const userResponse = await fetch(`http://localhost:2050/get_user?id=${data.message.uploader}`, {
+            method: "GET"
+        })
+
+        const userData: GetUserResult = await userResponse.json()
+        
+        author = userData.message.Username
+    }
+
+    onMount(() => {
+        load()
+    })
 </script>
 
 <Topbar/>
@@ -29,17 +73,17 @@
         <div class="w-[30%]">
             <div class="w-full bg-item self-start shadow-2xl rounded-3xl p-4">
                 <div class="flex flex-col space-y-[-1em]">
-                    <Stat name="Author" value="Nibbles"/>
-                    <Stat name="BPM" value="128"/>
+                    <Stat name="Author" value="{author}"/>
+                    <Stat name="BPM" value="{bpm}"/>
                     <Stat name="Duration" value="1:23"/>
                     <Stat name="Downloads" value="1,000"/>
-                    <Stat name="Upload Date" value="October 1, 1999"/>
+                    <Stat name="Upload Date" value={uploadDate}/>
                 </div>
                
                 <h1 class="w-full text-center text-[3em]">Games Used</h1>
                 
                 <div class="flex flex-wrap gap-2 mt-4">
-                    <Chip label="Flipper Snapper"/> <Chip label="Meet & Tweet"/> <Chip label="Hammer Time"/> <Chip label="A really long chip name"/> <Chip label="shortchip"/> 
+                   
                 </div>
             </div>
             

@@ -49,6 +49,7 @@ func main() {
     server.GET("/get_levels_from_user", routes.GetLevelsFromUser)
     server.GET("/download_riq", routes.DownloadRiq)
     server.GET("/search", routes.Search)
+    server.GET("/get_user", routes.GetUser)
     
     server.POST("/upload_riq", routes.UploadRiq)
     server.POST("/upload_cover_art", routes.UploadCoverArt)
