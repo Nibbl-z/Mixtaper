@@ -6,7 +6,6 @@ import (
 	"os"
 	"server/utils"
 
-	"github.com/appwrite/sdk-for-go/account"
 	"github.com/appwrite/sdk-for-go/appwrite"
 	"github.com/appwrite/sdk-for-go/file"
 	"github.com/appwrite/sdk-for-go/permission"
@@ -14,43 +13,29 @@ import (
 	"github.com/savsgio/atreugo/v11"
 )
 
-func UploadCoverArt(ctx *atreugo.RequestCtx) error {
+func UploadPfp(ctx *atreugo.RequestCtx) error {
 	client, success := utils.CreateClientWithHeaders(ctx)
 
-	if (!success) {
+	if !success {
 		return utils.UnauthorizedResponse(ctx)
 	}
 
-	id := ctx.Request.Header.Peek("ID")
-
-	if id == nil {
-		return utils.BadRespone(ctx, "Level ID is missing")
-	}
-	
-	if !utils.CheckLevelExists(string(id)) {
-		return utils.BadRespone(ctx, "Level doesn't exist")
-	}
-	
-	if ctx.Request.Header.ContentLength() > 20 * 500000 {
+	if ctx.Request.Header.ContentLength() > 5 * 1000000 {
 		return utils.BadRespone(ctx, "File must be less than 5MB.")
 	}
-
-	accountService := account.New(client)
-	user, err := accountService.Get()
 	
+	accounts := appwrite.NewAccount(client)
+	user, err := accounts.Get()
+
 	if err != nil {
 		return utils.ErrorResponse(ctx, "Failed to get user", err)
 	}
-
-	if !user.EmailVerification {
-		return utils.BadRespone(ctx, "Please verify your email before posting!")
-	}
 	
-	os.Mkdir("covers", fs.FileMode(0644))
+	storage := appwrite.NewStorage(client)
+
+	os.Mkdir("pfps", fs.FileMode(0644))
 
 	body := ctx.Request.Body()
-	
-	
 	
 	isPng := bytes.Equal(body[:4], []byte{0x89, 0x50, 0x4E, 0x47})
 	isJpeg := bytes.Equal(body[:3], []byte{0xFF, 0xD8, 0xFF})
@@ -63,27 +48,13 @@ func UploadCoverArt(ctx *atreugo.RequestCtx) error {
 		extension = ".jpg"
 	}
 	
-	path := "covers/" + string(id) + extension
+	path := "covers/" + string(user.Id) + extension
 
-	// Check image file to be valid
-	
 	if !isPng && !isJpeg {
 		return utils.BadRespone(ctx, "Invalid image. Only .png and .jpeg are supported.")
 	}
 
-	storage := appwrite.NewStorage(client)
-	
-	_, err = storage.GetFile("cover_art", string(id))
-	
-	if err == nil {
-		return utils.BadRespone(ctx, "Cover art already exists")
-	}
-	
-	err = os.WriteFile(
-		path,
-		body,
-		fs.FileMode(0644),
-	)
+	err = os.WriteFile(path, body, fs.FileMode(0644))
 
 	if err != nil {
 		return utils.ErrorResponse(ctx, "Failed to create temp upload file", err)
@@ -96,9 +67,9 @@ func UploadCoverArt(ctx *atreugo.RequestCtx) error {
 	}
 	
 	_, err = storage.CreateFile(
-		"cover_art",
-		string(id),
-		file.NewInputFile(path, string(id) + extension),
+		"profile_pictures",
+		user.Id,
+		file.NewInputFile(path, user.Id + extension),
 		storage.WithCreateFilePermissions(permissions),
 	)
 
@@ -108,7 +79,7 @@ func UploadCoverArt(ctx *atreugo.RequestCtx) error {
 		if fileRemoveErr != nil {
 			return utils.ErrorResponse(ctx, "Failed to remove temp file from server", err)
 		}
-		return utils.ErrorResponse(ctx, "Failed to upload cover art to server", err)
+		return utils.ErrorResponse(ctx, "Failed to upload profile picture to server", err)
 	}
 	
 	fileRemoveErr := os.Remove(path)
@@ -117,5 +88,5 @@ func UploadCoverArt(ctx *atreugo.RequestCtx) error {
 		return utils.ErrorResponse(ctx, "Failed to remove temp file from server", err)
 	}
 
-	return utils.OkResponse(ctx, "Uploaded cover art successfully!")
+	return utils.OkResponse(ctx, "Uploaded profile picture successfully!")
 }

@@ -41,23 +41,22 @@ func main() {
     server.POST("/signup", routes.Signup)
     server.POST("/login", routes.Login)
     server.POST("/change_username", routes.ChangeUsername)
-    
+    server.POST("/upload_pfp", routes.UploadPfp)
     server.POST("/send_email_verification", routes.SendEmailVerification)
     server.PUT("/verify_email", routes.VerifyEmail)
-
+    
     server.GET("/get_level", routes.GetLevel)
     server.GET("/get_levels_from_user", routes.GetLevelsFromUser)
     server.GET("/download_riq", routes.DownloadRiq)
     server.GET("/search", routes.Search)
     server.GET("/get_user", routes.GetUser)
-    
+    server.GET("/recent_levels", routes.RecentLevels)
+
     server.POST("/upload_riq", routes.UploadRiq)
     server.POST("/upload_cover_art", routes.UploadCoverArt)
     server.POST("/post_level", routes.PostLevel)
     server.POST("/edit_level", routes.EditLevel)
     server.POST("/delete_level", routes.DeleteLevel)
-    
-    server.GET("/recent_levels", routes.RecentLevels)
     
     if err := server.ListenAndServe(); err != nil {
         panic(err)
