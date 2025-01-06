@@ -17,6 +17,7 @@ export interface UserData {
 
 export interface SearchResult {
     message: LevelData[]
+    successful: boolean
 }
 
 export interface MessageResult {

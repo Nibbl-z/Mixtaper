@@ -8,7 +8,7 @@
     let results: LevelData[] = [];
     
     let covers: Record<string, string> = {}
-
+    
     async function getResults() {
         const response = await fetch("http://localhost:2050/recent_levels", {
             method: "GET",
@@ -36,7 +36,7 @@
             }, {})
         }
     }
-
+    
     async function checkCoverArt(url: string): Promise<boolean> {
         const response = await fetch(url)
         
