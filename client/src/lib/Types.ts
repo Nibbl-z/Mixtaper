@@ -12,7 +12,8 @@ export interface LevelData {
 export interface UserData {
     Username: string,
     DisplayName: string,
-    ID: string
+    ID: string,
+    Bio: string
 }
 
 export interface SearchResult {

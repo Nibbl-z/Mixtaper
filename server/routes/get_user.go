@@ -28,10 +28,20 @@ func GetUser(ctx *atreugo.RequestCtx) error {
 		return utils.ErrorResponse(ctx, "Failed to get username", err)
 	}
 
+	prefs, err := users.GetPrefs(id)
+
+	if err != nil {
+		return utils.ErrorResponse(ctx, "Failed to get bio", err)
+	}
+
+	var preferences utils.Prefs
+	prefs.Decode(&preferences)
+	
 
 	return utils.OkResponse(ctx, utils.User{
 		Username: username,
 		DisplayName: user.Name,
 		ID: user.Id,
+		Bio: preferences.Bio,
 	})
 }

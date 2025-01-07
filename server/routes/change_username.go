@@ -12,7 +12,7 @@ func ChangeUsername(ctx *atreugo.RequestCtx) error {
 	if len(username) > 20 {
 		return utils.BadRespone(ctx, "Username must be less than 20 characters!")
 	}
-
+	
 	if len(username) < 3 {
 		return utils.BadRespone(ctx, "Username must be at least 3 characters long!")
 	}

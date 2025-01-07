@@ -37,7 +37,7 @@ func Signup(ctx *atreugo.RequestCtx) error {
 	if len(signupRequest.Password) < 8 {
 		return utils.BadRespone(ctx, "Password must be at least 8 characters long!")
 	}
-
+	
 	if len(signupRequest.Password) > 64 {
 		return utils.BadRespone(ctx, "Password must be less than 64 characters!")
 	}

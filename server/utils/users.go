@@ -15,6 +15,11 @@ type User struct {
 	Username string
 	DisplayName string
 	ID string
+	Bio string
+}
+
+type Prefs struct {
+	Bio string `json:"bio"`
 }
 
 type Username struct {
