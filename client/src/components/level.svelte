@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from "$app/navigation";
     import Chip from "./chip.svelte"
     export let songName: string
     export let songArtist: string
@@ -38,7 +39,7 @@
     }
 
     function onClick() {
-    
+        goto(`/level?id=${id}`)
     }
 </script>
 

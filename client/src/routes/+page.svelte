@@ -63,6 +63,7 @@
     <div class="width-[100em] grid grid-cols-1 2cols:grid-cols-2 justify-items-center gap-8 my-4">
         {#each results as level}
             <Level 
+            id={level.$id}
             songName={level.songName} 
             songArtist={level.songArtist} 
             cover={covers[level.$id]}

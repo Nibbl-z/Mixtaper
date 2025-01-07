@@ -12,6 +12,7 @@
 
     let bpm: string
     let author: string
+    let authorId: string
     let uploadDate: string
 
     songName = "Awesome Song"
@@ -41,6 +42,7 @@
             description = data.message.description
             bpm = data.message.bpm.toString()
             uploadDate = data.message.$createdAt
+            authorId = data.message.uploader
         }
 
         const userResponse = await fetch(`http://localhost:2050/get_user?id=${data.message.uploader}`, {
@@ -73,7 +75,7 @@
         <div class="w-[30%]">
             <div class="w-full bg-item self-start shadow-2xl rounded-3xl p-4">
                 <div class="flex flex-col space-y-[-1em]">
-                    <Stat name="Author" value="{author}"/>
+                    <a href={`/user?id=${authorId}`}><Stat name="Author" value="{author}"/></a>
                     <Stat name="BPM" value="{bpm}"/>
                     <Stat name="Duration" value="1:23"/>
                     <Stat name="Downloads" value="1,000"/>
