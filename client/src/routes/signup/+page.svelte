@@ -37,7 +37,7 @@
         
         <p class="text-[1.25em] mt-8 mb-1">Email</p>
         
-        <input bind:this={emailField} type="text" id="email" class="w-[100%] h-[1.5em] rounded-xl text-[2em] p-[0.2em]">
+        <input bind:this={emailField} type="email" id="email" class="w-[100%] h-[1.5em] rounded-xl text-[2em] p-[0.2em]">
         
         <p class="text-[1.25em] mt-2 mb-1">Username</p>
         

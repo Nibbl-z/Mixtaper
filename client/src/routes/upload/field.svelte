@@ -29,7 +29,7 @@
     }
     
     let imageUrl: string
-
+    
     $: if (fileUpload && isImage) {
         imageUrl = URL.createObjectURL(fileUpload)
     }
@@ -41,12 +41,12 @@
     });
 
     let hovering = false
-
+    
     function hover(event: DragEvent) {
         event.preventDefault()
         hovering = true
     }
-
+    
     function leave(event: DragEvent) {
         event.preventDefault()
         hovering = false
@@ -55,7 +55,7 @@
     function drop(event: DragEvent) {
         event.preventDefault()
         hovering = false
-
+        
         if (event.dataTransfer?.files) {
             fileUpload = event.dataTransfer.files[0]
         }

@@ -26,7 +26,7 @@
         const response = await fetch(`https://cloud.appwrite.io/v1/storage/buckets/profile_pictures/files/${userId}/view?project=676f205d000370a15786&project=676f205d000370a15786&mode=admin`)
         
         if (response.ok) {
-            return `https://cloud.appwrite.io/v1/storage/buckets/profile_pictures/files/${userId}/view?project=676f205d000370a15786&project=676f205d000370a15786&mode=admin`
+            return `https://cloud.appwrite.io/v1/storage/buckets/profile_pictures/files/${userId}/view?project=676f205d000370a15786&project=676f205d000370a15786&mode=admin?` + new Date().getTime();
         } else {
             return "/PLACEHOLDER.png"
         }

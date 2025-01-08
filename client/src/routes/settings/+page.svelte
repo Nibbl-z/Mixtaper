@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { getCookie } from "$lib";
 	import type { MessageResult } from "$lib/Types";
-	import { onMount } from "svelte";
+	import { onDestroy, onMount } from "svelte";
     import Topbar from "../../components/topbar.svelte";
     import Field from "./field.svelte";
+	import type { ChangeEventHandler } from "svelte/elements";
 
     let displayName: InstanceType<typeof Field>
     let username: InstanceType<typeof Field>
@@ -97,6 +98,72 @@
         resultColor = data.successful ? "resultSuccess" : "resultError"
         result = data.message
     }
+
+    async function setPfp() {
+        const token = getCookie("token");
+        const arrayBuffer = await fileUpload.arrayBuffer();
+        const bytes = new Uint8Array(arrayBuffer);
+        
+        const response = await fetch("http://localhost:2050/upload_pfp", {
+            method: "POST",
+            headers: token ? {
+                "Authorization" : token
+            } : undefined,
+            body : bytes
+        })
+
+        const data: MessageResult = await response.json()
+        
+        resultColor = data.successful ? "resultSuccess" : "resultError"
+        result = data.message
+    }
+
+    let imageUrl: string
+    let fileUpload: File
+    let fileInput: HTMLInputElement
+    
+    $: if (fileUpload) {
+        imageUrl = URL.createObjectURL(fileUpload)
+    }
+    
+    onDestroy(() => {
+        if (imageUrl) {
+            URL.revokeObjectURL(imageUrl)
+        }
+    });
+
+    let hovering = false
+    
+    function hover(event: DragEvent) {
+        event.preventDefault()
+        hovering = true
+    }
+    
+    function leave(event: DragEvent) {
+        event.preventDefault()
+        hovering = false
+    }
+    
+    function drop(event: DragEvent) {
+        event.preventDefault()
+        hovering = false
+        
+        if (event.dataTransfer?.files) {
+            fileUpload = event.dataTransfer.files[0]
+        }
+    }
+
+    function pfpClick() {
+        fileInput.click()
+    }
+    
+    function handleFileSelect(event: Event) {
+        const target = event.target as HTMLInputElement
+        
+        if (target.files?.[0]) {
+            fileUpload = target.files[0]
+        }
+    }
     
     onMount(() => {
         displayName.getButton().onclick = setDisplayName
@@ -127,15 +194,30 @@
         <p class="text-[2em]">Profile Picture</p>
         
         <div class="h-[15em] flex flex-row flex-shrink-0">
-            <div class="aspect-w-1 aspect-h-1 h-[15em] w-[15em]">
-                <img src="/PLACEHOLDER.png" alt="" class="object-cover rounded-full shadow-2xl">
+            <div class="w-[15em] h-[15em] overflow-hidden flex-shrink-0">
+                <img src={imageUrl ? imageUrl : "/PLACEHOLDER.png"} alt="" class="aspect-w-1 aspect-h-1 object-cover rounded-full shadow-2xl w-full h-full">
             </div>
-            <div class="w-[70%] ml-auto bg-[#262329] border-dotted border-[#FFFFFF] border-4 p-2 flex items-center justify-center flex-col">
+            <input
+            bind:this={fileInput}
+            type="file"
+            accept=".png,.jpg,.jpeg"
+            onchange={handleFileSelect}
+            class="hidden"
+            />
+            <!-- svelte-ignore a11y_click_events_have_key_events SHUT UPPPPPP -->
+            <div role="button" 
+            tabindex=0 
+            aria-label="Drop files here" 
+            ondrop={drop} 
+            ondragover={hover}
+            ondragleave={leave}
+            onclick={pfpClick}
+            class="w-[70%] ml-auto {hovering ? "bg-[#63555a]" : "bg-[#262329]"} border-dotted border-[#FFFFFF] border-4 p-2 flex items-center justify-center flex-col">
                 <p class="w-full text-center text-2xl">Drag and drop or select .png/.jpg file to upload</p>
-                <img src="/upload.png" alt="Upload Icon" class="w-[4em] my-2">
-                <p class="w-full text-center text-xl">(max file size 1mb)</p>
+                <img src={"/upload.png"} alt="Upload Icon" class="w-[4em] my-2">
+                <p class="w-full text-center text-xl">(max file size 5mb)</p>
             </div>
         </div>
-       
+        <button onclick={setPfp} class="rounded-2xl bg-interactable text-[#FFFFFF] w-full] text-[2em] mt-auto">Change</button>
     </div>
 </div>

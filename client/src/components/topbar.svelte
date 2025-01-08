@@ -18,7 +18,7 @@
     </div>
     
     <div class="flex items-center space-x-4 absolute right-0 h-[100%] mr-4">
-        <a href="/" class="h-[100%] flex items-center">
+        <a href="/upload" class="h-[100%] flex items-center">
             <img src="/upload.png" class="text-[#FFFFFF] h-[70%] hover:brightness-75" alt="Account"/>
         </a>
         

@@ -26,7 +26,7 @@ func ChangeBio(ctx *atreugo.RequestCtx) error {
 			"bio" : string(bio),
 		},
 	)
-
+	
 	if err != nil {
 		return utils.ErrorResponse(ctx, "Failed to update bio", err)
 	}

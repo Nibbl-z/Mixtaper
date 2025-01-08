@@ -26,3 +26,5 @@ go.work.sum
 
 # Temp upload folder
 /uploads
+/pfps
+/covers

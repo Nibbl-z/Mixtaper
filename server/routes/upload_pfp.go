@@ -48,7 +48,7 @@ func UploadPfp(ctx *atreugo.RequestCtx) error {
 		extension = ".jpg"
 	}
 	
-	path := "covers/" + string(user.Id) + extension
+	path := "pfps/" + string(user.Id) + extension
 
 	if !isPng && !isJpeg {
 		return utils.BadRespone(ctx, "Invalid image. Only .png and .jpeg are supported.")
@@ -58,6 +58,22 @@ func UploadPfp(ctx *atreugo.RequestCtx) error {
 
 	if err != nil {
 		return utils.ErrorResponse(ctx, "Failed to create temp upload file", err)
+	}
+
+	f, err := storage.GetFile("profile_pictures", user.Id)
+	
+	if f != nil {
+		_, err = storage.DeleteFile("profile_pictures", user.Id)
+
+		if err != nil {
+			fileRemoveErr := os.Remove(path)
+		
+			if fileRemoveErr != nil {
+				return utils.ErrorResponse(ctx, "Failed to remove temp file from server", err)
+			}
+
+			return utils.ErrorResponse(ctx, "Failed to delete previous profile picture from server", err)
+		}
 	}
 
 	permissions := []string{
@@ -72,7 +88,7 @@ func UploadPfp(ctx *atreugo.RequestCtx) error {
 		file.NewInputFile(path, user.Id + extension),
 		storage.WithCreateFilePermissions(permissions),
 	)
-
+	
 	if err != nil {
 		fileRemoveErr := os.Remove(path)
 	
