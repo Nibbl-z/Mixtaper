@@ -45,6 +45,7 @@ func main() {
     server.POST("/change_password", routes.ChangePassword)
     server.POST("/change_bio", routes.ChangeBio)
     server.POST("/upload_pfp", routes.UploadPfp)
+    server.GET("/get_my_id", routes.GetMyId)
     server.POST("/send_email_verification", routes.SendEmailVerification)
     server.PUT("/verify_email", routes.VerifyEmail)
     

@@ -16,6 +16,7 @@ type User struct {
 	DisplayName string
 	ID string
 	Bio string
+	Verified bool
 }
 
 type Prefs struct {

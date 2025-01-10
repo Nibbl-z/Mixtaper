@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getCookie } from "$lib";
+	import { getCookie, getID, getPfp } from "$lib";
 	import type { MessageResult } from "$lib/Types";
 	import { onDestroy, onMount } from "svelte";
     import Topbar from "../../components/topbar.svelte";
@@ -195,7 +195,12 @@
         
         <div class="h-[15em] flex flex-row flex-shrink-0">
             <div class="w-[15em] h-[15em] overflow-hidden flex-shrink-0">
-                <img src={imageUrl ? imageUrl : "/PLACEHOLDER.png"} alt="" class="aspect-w-1 aspect-h-1 object-cover rounded-full shadow-2xl w-full h-full">
+                {#await getPfp()}
+                    <img src={"/PLACEHOLDER.png"} alt="" class="aspect-w-1 aspect-h-1 object-cover rounded-full shadow-2xl w-full h-full">
+                {:then pfp} 
+                    <img src={pfp ? pfp : "/PLACEHOLDER.png"} alt="" class="aspect-w-1 aspect-h-1 object-cover rounded-full shadow-2xl w-full h-full">
+                {/await}
+                
             </div>
             <input
             bind:this={fileInput}

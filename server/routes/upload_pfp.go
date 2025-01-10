@@ -49,18 +49,18 @@ func UploadPfp(ctx *atreugo.RequestCtx) error {
 	}
 	
 	path := "pfps/" + string(user.Id) + extension
-
+	
 	if !isPng && !isJpeg {
 		return utils.BadRespone(ctx, "Invalid image. Only .png and .jpeg are supported.")
 	}
 
 	err = os.WriteFile(path, body, fs.FileMode(0644))
-
+	
 	if err != nil {
 		return utils.ErrorResponse(ctx, "Failed to create temp upload file", err)
 	}
-
-	f, err := storage.GetFile("profile_pictures", user.Id)
+	
+	f, _ := storage.GetFile("profile_pictures", user.Id)
 	
 	if f != nil {
 		_, err = storage.DeleteFile("profile_pictures", user.Id)

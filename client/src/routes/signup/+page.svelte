@@ -48,6 +48,7 @@
         <input bind:this={passwordField} type="password" id="password" class="w-[100%] h-[1.5em] rounded-xl text-[2em] p-[0.2em]">
 
         <div class="mt-auto">
+            <p class="text-xl mb-2">Already have an account? <u class="text-center"><a href="/login" class="text-xl">Log in here</a></u></p>
             <p class="w-full text-center text-xl text-{resultColor}">{result}</p>
             <button on:click={signup} class="rounded-2xl bg-interactable text-[#FFFFFF] w-[100%] text-2xl p-2">Signup</button>
         </div>
