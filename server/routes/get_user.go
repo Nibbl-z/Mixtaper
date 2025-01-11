@@ -43,5 +43,6 @@ func GetUser(ctx *atreugo.RequestCtx) error {
 		DisplayName: user.Name,
 		ID: user.Id,
 		Bio: preferences.Bio,
+		Verified: user.EmailVerification,
 	})
 }

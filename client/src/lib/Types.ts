@@ -13,7 +13,8 @@ export interface UserData {
     Username: string,
     DisplayName: string,
     ID: string,
-    Bio: string
+    Bio: string,
+    Verified: boolean
 }
 
 export interface SearchResult {

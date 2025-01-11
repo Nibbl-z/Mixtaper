@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
 	import { deleteCookie, getCookie, getID, getPfp } from "$lib";
-	import type { MessageResult } from "$lib/Types";
+	import type { GetUserResult, MessageResult } from "$lib/Types";
 	import { onMount } from "svelte";
 
     let searchbar: HTMLInputElement
@@ -16,6 +16,23 @@
         deleteCookie("token")
         goto("/")
         window.location.reload()
+    }
+
+    async function isVerified(): Promise<boolean> {
+        const id = await getID()
+        if (id == "") return true
+        
+        const params = new URLSearchParams({
+            id: id
+        })
+
+        const response = await fetch(`http://localhost:2050/get_user?${params}`, {
+            method: "GET"
+        })
+    
+        const userData: GetUserResult = await response.json()
+
+        return userData.message.Verified
     }
 </script>
 
@@ -69,3 +86,15 @@
         </div>
     </div>
 </div>
+
+{#await isVerified()}
+    <div></div>
+{:then verified} 
+    {#if verified}
+    <div></div>
+    {:else}
+    <div class="bg-[#5c2e99] h-[4em] p-[0.2em] flex items-center justify-center relative">
+        <p class="text-2xl text-white">You are unverified, and cannot post levels yet! Check your email for a verification link.</p>
+    </div>
+    {/if}
+{/await}
