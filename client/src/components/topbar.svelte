@@ -68,7 +68,7 @@
                     <img src={pfp} class="text-[#FFFFFF] h-[70%] hover:brightness-75" alt="Account"/>
                 {/await}
             </a>
-            <div class="flex flex-col text-center opacity-0 absolute right-0 bg-topbar group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto">
+            <div class="flex flex-col text-center opacity-0 absolute right-0 bg-topbar group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto z-50">
                 {#await getID()}
                     <a class="text-3xl hover:bg-topbarHover p-4" href="/login">Login</a>
                     <a class="text-3xl hover:bg-topbarHover p-4" href="/signup">Signup</a>

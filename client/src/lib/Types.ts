@@ -22,6 +22,12 @@ export interface SearchResult {
     successful: boolean
 }
 
+export interface Game {
+    name: string,
+    color: string
+}
+
+
 export interface MessageResult {
     message: string
     successful: boolean

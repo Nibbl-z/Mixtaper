@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
+	import { gameNames } from "$lib/levels";
+	import type { Game } from "$lib/Types";
     import Chip from "./chip.svelte"
     export let songName: string
     export let songArtist: string
@@ -7,29 +9,9 @@
     export let duration: string
     export let bpm: number
     export let id: string
-
+    
     export let gamesUsed: string[] = []
     let games: Game[] = []
-    
-    interface Game {
-        name: string,
-        color: string
-    }
-
-    let gameNames: Record<string, Game> = {
-        "flipperSnapper" : {
-            name : "Flipper Snapper",
-            color : "#D68D62"
-        },
-        "meetAndTweet" : {
-            name : "Meet & Tweet",
-            color : "#FAEA37"
-        },
-        "hammerTime" : {
-            name : "Hammer Time",
-            color : "#DCDEC7"
-        }
-    }
     
     for (let game of gamesUsed) {
         if (game != "gameManager") {

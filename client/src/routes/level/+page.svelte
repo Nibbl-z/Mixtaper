@@ -3,8 +3,9 @@
     import Stat from "./stat.svelte";
     import Chip from "../../components/chip.svelte";
 	import { page } from "$app/stores";
-	import type { GetLevelResult, GetUserResult } from "$lib/Types";
+	import type { Game, GetLevelResult, GetUserResult } from "$lib/Types";
 	import { onMount } from "svelte";
+	import { gameNames } from "$lib/levels";
     let songName: string
     let songArtist: string
     let cover: string
@@ -22,6 +23,9 @@
 
     let id = $page.url.searchParams.get('id') || '';
 
+    let games: Game[] = []
+    let loading = true
+    
     async function load() {
         const params = new URLSearchParams({
             id: id
@@ -41,8 +45,15 @@
             songArtist = data.message.songArtist
             description = data.message.description
             bpm = data.message.bpm.toString()
-            uploadDate = data.message.$createdAt
+            uploadDate = data.message.$createdAt.slice(0, 10)
             authorId = data.message.uploader
+        }
+
+        for (let game of data.message.gamesUsed) {
+            if (game != "gameManager") {
+                console.log(gameNames[game])
+                games.push(gameNames[game])
+            }
         }
 
         const userResponse = await fetch(`http://localhost:2050/get_user?id=${data.message.uploader}`, {
@@ -52,8 +63,18 @@
         const userData: GetUserResult = await userResponse.json()
         
         author = userData.message.Username
+
+        loading = false
     }
 
+    async function gamesUsed(): Promise<Game[]> {
+        while(loading) {
+            await new Promise(resolve => setTimeout(resolve, 100))
+        }
+
+        return games
+    }
+    
     onMount(() => {
         load()
     })
@@ -85,7 +106,13 @@
                 <h1 class="w-full text-center text-[3em]">Games Used</h1>
                 
                 <div class="flex flex-wrap gap-2 mt-4">
-                   
+                    {#await gamesUsed()}
+                        <div></div>
+                    {:then gamesUsed} 
+                        {#each gamesUsed as game}
+                            <Chip label={game.name} color={game.color}/>
+                        {/each}
+                    {/await}
                 </div>
             </div>
             

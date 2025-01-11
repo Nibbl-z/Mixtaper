@@ -1,4 +1,4 @@
-import type { LevelData, SearchResult } from "./Types";
+import type { Game, LevelData, SearchResult } from "./Types";
 
 async function checkCoverArt(url: string): Promise<boolean> {
     const response = await fetch(url)
@@ -27,4 +27,19 @@ export async function loadLevels(levels: SearchResult): Promise<{ results: Level
     }, {})
 
     return { results, covers }
+}
+
+export const gameNames: Record<string, Game> = {
+    "flipperSnapper" : {
+        name : "Flipper Snapper",
+        color : "#D68D62"
+    },
+    "meetAndTweet" : {
+        name : "Meet & Tweet",
+        color : "#19a1e0"
+    },
+    "hammerTime" : {
+        name : "Hammer Time",
+        color : "#736c64"
+    }
 }
