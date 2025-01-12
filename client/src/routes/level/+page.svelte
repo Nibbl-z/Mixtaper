@@ -15,10 +15,11 @@
     let author: string
     let authorId: string
     let uploadDate: string
+    let youtubeVideo: string
 
-    songName = "Awesome Song"
-    songArtist = "Awesome Artist"
-    description = "Even more amazing description. Did I ever mention my extreme dislike for CSS?"
+    songName = "Loading..."
+    songArtist = "Loading..."
+    description = "Loading..."
     cover = "/PLACEHOLDER.png"
 
     let id = $page.url.searchParams.get('id') || '';
@@ -64,7 +65,8 @@
         const userData: GetUserResult = await userResponse.json()
         
         author = userData.message.Username
-
+        console.log(data.message)
+        youtubeVideo = getYoutubeId(data.message.youtubeVideo || "") || ""
         loading = false
     }
 
@@ -114,6 +116,21 @@
         downloadingMessage = "Downloaded successfully!"
         downloadingColor = "resultSuccess"
     }
+
+    function getYoutubeId(url: string): string | null {
+        const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+        const match = url.match(regex);
+
+        return match ? match[1] : null;
+    }
+
+    async function getYoutubeEmbedId() {
+        while(loading) {
+            await new Promise(resolve => setTimeout(resolve, 100))
+        }
+
+        return youtubeVideo
+    }
     
     onMount(() => {
         load()
@@ -136,18 +153,16 @@
         <div class="w-[30%]">
             <div class="w-full bg-item self-start shadow-2xl rounded-3xl p-4">
                 <div class="flex flex-col space-y-[-1em]">
-                    <a href={`/user?id=${authorId}`}><Stat name="Author" value="{author}"/></a>
-                    <Stat name="BPM" value="{bpm}"/>
-                    <Stat name="Duration" value="1:23"/>
-                    <Stat name="Downloads" value="1,000"/>
-                    <Stat name="Upload Date" value={uploadDate}/>
+                    <a href={`/user?id=${authorId}`}><Stat name="Author" value="{author || "Loading..."}"/></a>
+                    <Stat name="BPM" value="{bpm || "Loading..."}"/>
+                    <Stat name="Upload Date" value={uploadDate || "Loading..."}/>
                 </div>
                
                 <h1 class="w-full text-center text-[3em]">Games Used</h1>
                 
                 <div class="flex flex-wrap gap-2 mt-4">
                     {#await gamesUsed()}
-                        <div></div>
+                    <p class="w-full h-full text-center text-3xl">Loading...</p>
                     {:then gamesUsed} 
                         {#each gamesUsed as game}
                             <Chip label={game.name} color={game.color}/>
@@ -165,9 +180,18 @@
         </div>
         
         <div class="flex-grow h-fit bg-item ml-10 rounded-3xl shadow-2xl p-5">
-            <div class="relative w-full pt-[56.25%]">
-                <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/TjKslu3v97I" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="YouTube video player"></iframe>
-            </div>
+            {#await getYoutubeEmbedId()}
+            <p class="w-full h-full text-center text-3xl">Loading...</p>
+            {:then id}
+                {#if id != ""}
+                <div class="relative w-full pt-[56.25%]">
+                    <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/{id}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="YouTube video player"></iframe>
+                </div>
+                {:else}
+                <p class="w-full h-full text-center text-3xl">No preview video was provided :(</p>
+                {/if}
+            {/await}
+            
         </div>
     </div>
 </div>

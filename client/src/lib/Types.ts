@@ -5,6 +5,7 @@ export interface LevelData {
     uploader: string
     bpm: number,
     gamesUsed: string[],
+    youtubeVideo: string,
     $id: string,
     $createdAt: string
 }

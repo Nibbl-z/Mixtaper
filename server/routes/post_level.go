@@ -16,6 +16,7 @@ type PostData struct {
 	SongArtist string `json:"songArtist"`
 	ChartName string `json:"chartName,omitempty"`
 	Description string `json:"description,omitempty"`
+	YouTubeVideo string `json:"youtubeVideo,omitempty"`
 }
 
 func PostLevel(ctx *atreugo.RequestCtx) error {
@@ -56,6 +57,10 @@ func PostLevel(ctx *atreugo.RequestCtx) error {
 	
 	if postRequest.ChartName != "" {
 		document["chartName"] = postRequest.ChartName
+	}
+
+	if postRequest.YouTubeVideo != "" {
+		document["youtubeVideo"] = postRequest.YouTubeVideo
 	}
 	
 	level, err := database.CreateDocument(

@@ -27,6 +27,7 @@ type Level struct {
 	Uploader string `json:"uploader"`
 	ID string `json:"$id"`
 	UploadDate string `json:"$createdAt"`
+	YouTubeVideo string `json:"youtubeVideo"`
 }
 
 func CheckLevelExists(id string) bool {
