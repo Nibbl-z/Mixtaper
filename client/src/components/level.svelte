@@ -28,7 +28,9 @@
 
 <div class="w-[50em] h-[15em] cursor-pointer" on:click={onClick} on:keydown={(e) => e.key === 'Enter' && onClick()} role="button" tabindex="0">
     <div class="bg-item p-3 w-[50em] h-[15em] rounded-3xl flex items-left shadow-2xl">
-        <img src={cover != "" ? cover : "/PLACEHOLDER.png"} alt="Cover Art" class="h-[100%] rounded-xl shadow-2xl">
+        <div class="w-[15em] h-full overflow-hidden flex-shrink-0">
+            <img src={cover != "" ? cover : "/PLACEHOLDER.png"} alt="Cover Art" class="aspect-w-1 aspect-h-1 object-cover rounded-xl shadow-2xl w-full h-full">
+        </div>
         <div class="mx-5 flex flex-col space-y-[-0.2em]">
             <h1 class="text-[2em] leading-[125%]">{songName}</h1>        
             <h1 class="text-[1.5em] text-author truncate">{songArtist}</h1>
