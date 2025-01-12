@@ -14,6 +14,7 @@
     let games: Game[] = []
     
     for (let game of gamesUsed) {
+        if (gameNames[game] === undefined) continue
         if (game != "gameManager") {
             console.log(gameNames[game])
             games.push(gameNames[game])

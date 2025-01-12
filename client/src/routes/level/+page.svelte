@@ -3,7 +3,7 @@
     import Stat from "./stat.svelte";
     import Chip from "../../components/chip.svelte";
 	import { page } from "$app/stores";
-	import type { Game, GetLevelResult, GetUserResult } from "$lib/Types";
+	import type { Game, GetLevelResult, GetUserResult, MessageResult } from "$lib/Types";
 	import { onMount } from "svelte";
 	import { gameNames } from "$lib/levels";
     let songName: string
@@ -50,6 +50,7 @@
         }
 
         for (let game of data.message.gamesUsed) {
+            if (gameNames[game] === undefined) continue
             if (game != "gameManager") {
                 console.log(gameNames[game])
                 games.push(gameNames[game])
@@ -73,6 +74,45 @@
         }
 
         return games
+    }
+    
+    let downloadingMessage = ""
+    let downloadingColor = "white"
+
+    async function downloadLevel() {
+        downloadingMessage = "Downloading..."
+        downloadingColor = "white"
+
+        const params = new URLSearchParams({
+            id: id
+        })
+
+        const response = await fetch(`http://localhost:2050/download_riq?${params}`, {
+            method: "GET"
+        })
+
+        if (!response.ok) {
+            const data: MessageResult = await response.json()
+
+            downloadingMessage = data.message
+            downloadingColor = "resultError"
+
+            return
+        }
+
+        const blob = await response.blob()
+        const url = window.URL.createObjectURL(blob)
+        const link = document.createElement("a")
+        
+        link.href = url
+        link.download = `${songName}.riq`
+        document.body.appendChild(link)
+        link.click()
+        window.URL.revokeObjectURL(url)
+        link.remove()
+    
+        downloadingMessage = "Downloaded successfully!"
+        downloadingColor = "resultSuccess"
     }
     
     onMount(() => {
@@ -116,10 +156,12 @@
                 </div>
             </div>
             
-            <button class="w-full rounded-2xl bg-interactable text-[#FFFFFF] text-2xl p-2 mt-5 flex items-center justify-center">
+            <button onclick={downloadLevel} class="w-full rounded-2xl bg-interactable text-[#FFFFFF] text-2xl p-2 mt-5 flex items-center justify-center">
                 <img src="/download.png" alt="Search icon" class="h-6 w-6 mr-2"/>
                 Download
             </button>
+
+            <p class="w-full text-center text-2xl text-{downloadingColor}">{downloadingMessage}</p>
         </div>
         
         <div class="flex-grow h-fit bg-item ml-10 rounded-3xl shadow-2xl p-5">

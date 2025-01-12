@@ -7,7 +7,7 @@ import (
 )
 
 func DownloadRiq(ctx *atreugo.RequestCtx) error {
-	id := ctx.Request.Body()
+	id := string(ctx.QueryArgs().Peek("id"))
 	
 	if string(id) == "" {
 		return utils.BadRespone(ctx, "Level ID missing")

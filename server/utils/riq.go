@@ -2,6 +2,7 @@ package utils
 
 import (
 	"archive/zip"
+	"bytes"
 	"encoding/json"
 	"errors"
 	"io"
@@ -24,7 +25,7 @@ func CheckRiq(path string) error {
 			hasRemix = true
 		}
 		
-		if file.Name == "song.ogg" {
+		if file.Name == "song.ogg" || file.Name == "song.bin" {
 			hasSong = true
 		}
 	}
@@ -118,6 +119,9 @@ func GetRemixData(path string) (map[string]interface{}, error) {
 	}
 	
 	var remixData map[string]interface{}
+	
+	// Stupid UTF8
+	remixBytes = bytes.TrimPrefix(remixBytes, []byte("\xef\xbb\xbf"))
 
 	err = json.Unmarshal(remixBytes, &remixData)
 	if err != nil {
