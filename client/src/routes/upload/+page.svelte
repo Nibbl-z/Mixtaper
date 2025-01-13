@@ -106,6 +106,22 @@
         return data
     }
 
+    async function deleteUpload(id: string | undefined) {
+        const token = getCookie("token");
+
+        const data: MessageResult = await fetch("http://localhost:2050/delete_level", {
+            method: "POST",
+            headers : token ? {
+                "Authorization" : token
+            } : undefined,
+            body: id
+        }).then(response => response.json())
+        .catch(error => {
+            console.log(error)
+            throw error
+        })
+    }
+
     async function upload() {
         let riq = fields["riq"].element?.getFile()
         
@@ -152,6 +168,9 @@
             if (!response.successful) {
                 result = response.message
                 resultColor = "resultError"
+
+                deleteUpload(postLevelData.id)
+
                 return
             }
         }
@@ -161,6 +180,9 @@
         if (!riqResponse.successful) {
             result = riqResponse.message
             resultColor = "resultError"
+
+            deleteUpload(postLevelData.id)
+
             return
         }
         
