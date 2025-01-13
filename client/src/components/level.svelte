@@ -27,7 +27,7 @@
 </script>
 
 <div class="w-[50em] h-[15em] cursor-pointer" on:click={onClick} on:keydown={(e) => e.key === 'Enter' && onClick()} role="button" tabindex="0">
-    <div class="bg-item p-3 w-[50em] h-[15em] rounded-3xl flex items-left shadow-2xl">
+    <div class="bg-item hover:bg-itemHover p-3 w-[50em] h-[15em] rounded-3xl flex items-left shadow-2xl">
         <div class="h-[calc(15em-1.5rem)] w-[calc(15em-1.5rem)] overflow-hidden flex-shrink-0">
             <img src={cover != "" ? cover : "/PLACEHOLDER.png"} alt="Cover Art" class="aspect-w-1 aspect-h-1 object-cover rounded-xl shadow-2xl w-full h-full">
         </div>

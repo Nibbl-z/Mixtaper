@@ -30,12 +30,6 @@
             big: false,
             file: false
         },
-        chartName: {
-            label: "Chart Name",
-            required: false,
-            big: false,
-            file: false
-        },
         description: {
             label: "Description",
             required: false,

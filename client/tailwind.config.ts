@@ -13,7 +13,9 @@ export default {
 				topbar: '#463F61',
 				topbarHover: '#2c283d',
 				item: '#2A243F',
+				itemHover: `#473e69`,
 				interactable: '#B87EFF',
+				interactableHover: '#d1abff',
 				author: '#d3d3d3',
 				description: '#cacaca',
 

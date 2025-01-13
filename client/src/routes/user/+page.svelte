@@ -13,9 +13,9 @@
     export let pfp: string
     
     pfp = "/PLACEHOLDER.png"
-    displayName = "Nibbles"
-    username = "nibbles"
-    bio = "aaaaa"
+    displayName = "Loading..."
+    username = "Loading..."
+    bio = "Loading..."
     
     let levels: LevelData[] = [];
     let covers: Record<string, string> = {};
