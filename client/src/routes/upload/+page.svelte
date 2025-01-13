@@ -192,7 +192,7 @@
         <p class="w-full text-center text-2xl text-{resultColor}">{result}</p>
         
         <div class="flex items-center justify-center">
-            <button on:click={upload} class="rounded-2xl bg-interactable text-[#FFFFFF] w-[20%] text-2xl p-2 mt-auto">Post</button>
+            <button on:click={upload} class="rounded-2xl bg-interactable hover:bg-interactableHover text-[#FFFFFF] w-[20%] text-2xl p-2 mt-auto">Post</button>
         </div>
     </div>
 </div>

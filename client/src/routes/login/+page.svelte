@@ -60,7 +60,7 @@
         <div class="mt-auto">
             <p class="text-xl mb-2">Don't have an account? <u class="text-center"><a href="/signup" class="text-xl">Sign up here</a></u></p>
             <p class="w-full text-center text-xl text-{resultColor}">{result}</p>
-            <button on:click={login} class="rounded-2xl bg-interactable text-[#FFFFFF] w-[100%] text-2xl p-2">Login</button>
+            <button on:click={login} class="rounded-2xl bg-interactable hover:bg-interactableHover text-[#FFFFFF] w-[100%] text-2xl p-2">Login</button>
         </div>
        
     </div>

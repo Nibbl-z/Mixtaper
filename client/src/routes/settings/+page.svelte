@@ -189,7 +189,7 @@
         
         <p class="text-[2em]">About Me</p>
         <textarea bind:this={bio} id="aboutMe" class="w-full h-[8em] rounded-xl text-[2em] p-[0.2em] ml-auto"></textarea>
-        <button bind:this={bioSubmit} class="rounded-2xl bg-interactable text-[#FFFFFF] w-full] text-[2em] mt-auto">Change</button>
+        <button bind:this={bioSubmit} class="rounded-2xl bg-interactable hover:bg-interactableHover text-[#FFFFFF] w-full] text-[2em] mt-auto">Change</button>
     
         <p class="text-[2em]">Profile Picture</p>
         
@@ -223,6 +223,6 @@
                 <p class="w-full text-center text-xl">(max file size 5mb)</p>
             </div>
         </div>
-        <button onclick={setPfp} class="rounded-2xl bg-interactable text-[#FFFFFF] w-full] text-[2em] mt-auto">Change</button>
+        <button onclick={setPfp} class="rounded-2xl bg-interactable hover:bg-interactableHover text-[#FFFFFF] w-full] text-[2em] mt-auto">Change</button>
     </div>
 </div>

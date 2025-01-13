@@ -15,7 +15,7 @@ export default {
 				item: '#2A243F',
 				itemHover: `#473e69`,
 				interactable: '#B87EFF',
-				interactableHover: '#d1abff',
+				interactableHover: '#6e41a6',
 				author: '#d3d3d3',
 				description: '#cacaca',
 

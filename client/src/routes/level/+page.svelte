@@ -153,7 +153,7 @@
         <div class="w-[30%]">
             <div class="w-full bg-item self-start shadow-2xl rounded-3xl p-4">
                 <div class="flex flex-col space-y-[-1em]">
-                    <a href={`/user?id=${authorId}`}><Stat name="Author" value="{author || "Loading..."}"/></a>
+                    <a href={`/user?id=${authorId}`}><Stat name="Author" value="{author || "Loading..."}" hover/></a>
                     <Stat name="BPM" value="{bpm || "Loading..."}"/>
                     <Stat name="Upload Date" value={uploadDate || "Loading..."}/>
                 </div>
@@ -171,7 +171,7 @@
                 </div>
             </div>
             
-            <button onclick={downloadLevel} class="w-full rounded-2xl bg-interactable text-[#FFFFFF] text-2xl p-2 mt-5 flex items-center justify-center">
+            <button onclick={downloadLevel} class="w-full rounded-2xl bg-interactable hover:bg-interactableHover text-[#FFFFFF] text-2xl p-2 mt-5 flex items-center justify-center">
                 <img src="/download.png" alt="Search icon" class="h-6 w-6 mr-2"/>
                 Download
             </button>
