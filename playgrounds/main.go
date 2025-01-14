@@ -2,6 +2,8 @@ package main
 
 import (
 	"os"
+	"fmt"
+	"github.com/joho/godotenv"
 
 	"github.com/appwrite/sdk-for-go/appwrite"
 	"github.com/appwrite/sdk-for-go/databases"
@@ -63,22 +65,44 @@ func createLevelAttributes(db *databases.Databases) {
 	}
 }
 
+func createLevelIndexes(db *databases.Databases) {
+	for _, index := range LEVEL_INDEXES {
+		createIndex(db, "levels", index.Key, index.Type, index.Attributes)
+	}
+}
+
 func main() {
+	err := godotenv.Load()
+	
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("Creating client")
+	fmt.Println(os.Getenv("APPWRITE_API_ENDPOINT"))
 	client := appwrite.NewClient(
 		appwrite.WithEndpoint(os.Getenv("APPWRITE_API_ENDPOINT")),
 		appwrite.WithProject(os.Getenv("APPWRITE_PROJECT_ID")),
 		appwrite.WithKey(os.Getenv("APPWRITE_API_KEY")),
 	)
 
+	///// Database
+
+	fmt.Println("Creating database")
+
 	database := appwrite.NewDatabases(client)
 
-	_, err := database.Create(
+	_, err = database.Create(
 		"mixtaper",
 		"Mixtaper",
 		database.WithCreateEnabled(true),
 	)
 	
 	if err != nil {panic(err)}
+
+	// Levels
+
+	fmt.Println("Creating levels collection")
 
 	_, err = database.CreateCollection(
 		"mixtaper",
@@ -95,4 +119,86 @@ func main() {
 	if err != nil {panic(err)}
 
 	createLevelAttributes(database)
+	createLevelIndexes(database)
+
+	// Usernames
+
+	fmt.Println("Creating usernames collection")
+
+	_, err = database.CreateCollection(
+		"mixtaper",
+		"usernames",
+		"Usernames",
+		database.WithCreateCollectionPermissions([]string{
+			permission.Read(role.Any()),
+			permission.Create(role.Users("verified")),
+		}),
+		database.WithCreateCollectionDocumentSecurity(true),
+		database.WithCreateCollectionEnabled(true),
+	)
+	
+	if err != nil {panic(err)}
+
+	createAttribute(database, "usernames", "username", "string", true, 20)
+	createIndex(database, "usernames", "id", "unique", []string{"username"})
+
+	///// Storage
+
+	fmt.Println("Creating RIQ bucket")
+
+	storage := appwrite.NewStorage(client)
+
+	_, err = storage.CreateBucket(
+		"riq_files",
+		"RIQs",
+		storage.WithCreateBucketEnabled(true),
+		storage.WithCreateBucketPermissions([]string{permission.Create(role.Users("verified"))}),
+		storage.WithCreateBucketFileSecurity(true),
+		storage.WithCreateBucketAntivirus(true),
+		storage.WithCreateBucketEncryption(true),
+		storage.WithCreateBucketMaximumFileSize(20971520),
+	)
+	if err != nil {panic(err)}
+
+	fmt.Println("Creating profile picture bucket")
+
+	_, err = storage.CreateBucket(
+		"profile_pictures",
+		"Profile Pictures",
+		storage.WithCreateBucketEnabled(true),
+		storage.WithCreateBucketPermissions([]string{
+			permission.Create(role.Users("")),
+			permission.Read(role.Any()),
+		}),
+		storage.WithCreateBucketFileSecurity(true),
+		storage.WithCreateBucketAntivirus(true),
+		storage.WithCreateBucketEncryption(true),
+		storage.WithCreateBucketAllowedFileExtensions([]string{
+			"png", "jpg", "jpeg",
+		}),
+		storage.WithCreateBucketMaximumFileSize(5242880),
+	)
+	if err != nil {panic(err)}
+
+	fmt.Println("Creating cover art bucket")
+
+	_, err = storage.CreateBucket(
+		"cover_art",
+		"Cover Art",
+		storage.WithCreateBucketEnabled(true),
+		storage.WithCreateBucketPermissions([]string{
+			permission.Create(role.Users("verified")),
+			permission.Read(role.Any()),
+		}),
+		storage.WithCreateBucketFileSecurity(true),
+		storage.WithCreateBucketAntivirus(true),
+		storage.WithCreateBucketEncryption(true),
+		storage.WithCreateBucketAllowedFileExtensions([]string{
+			"png", "jpg", "jpeg",
+		}),
+		storage.WithCreateBucketMaximumFileSize(5242880),
+	)
+	if err != nil {panic(err)}
+
+	fmt.Println("Appwrite setup complete!")
 }
