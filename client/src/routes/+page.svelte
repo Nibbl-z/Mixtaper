@@ -4,13 +4,14 @@
 
     import type { LevelData, SearchResult } from "$lib/Types";
 	import { onMount } from "svelte";
+	import { PUBLIC_BACKEND_URL, PUBLIC_PROJECT_ID } from "$env/static/public";
 
     let results: LevelData[] = [];
     
     let covers: Record<string, string> = {}
     
     async function getResults() {
-        const response = await fetch("http://localhost:2050/recent_levels", {
+        const response = await fetch(PUBLIC_BACKEND_URL + "/recent_levels", {
             method: "GET",
             headers: {
                 "Origin": "http://localhost:5173"
@@ -22,7 +23,7 @@
             results = data.message
             
             const coverPromises = results.map(result => {
-                const coverUrl = `https://cloud.appwrite.io/v1/storage/buckets/cover_art/files/${result.$id}/view?project=676f205d000370a15786&project=676f205d000370a15786`
+                const coverUrl = `https://cloud.appwrite.io/v1/storage/buckets/cover_art/files/${result.$id}/view?project=${PUBLIC_PROJECT_ID}&project=${PUBLIC_PROJECT_ID}`
                 return checkCoverArt(coverUrl).then(exists => ({
                     id: result.$id,
                     url: exists ? coverUrl : "/PLACEHOLDER.png"
@@ -55,10 +56,9 @@
     <h1 class="xl:text-5xl text-2xl font-Itim">Custom Levels and Mixtapes for Bits and Bops</h1>
 </div>
 
-<div class="flex items-center justify-center flex-col">
+<div class="flex items-center justify-center flex-col mt-10">
     <div class="w-full 2cols:max-w-[100em] max-w-[50em] flex justify-between items-center">
-        <h1 class="text-left text-3xl">Recently Uploaded</h1>
-        <a href="/" class="text-right text-3xl">Show More &gt;</a>
+        <h1 class="text-left text-4xl">Recently Uploaded</h1>
     </div>
     <div class="width-[100em] grid grid-cols-1 2cols:grid-cols-2 justify-items-center gap-8 my-4">
         {#each results as level}

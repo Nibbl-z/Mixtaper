@@ -6,6 +6,8 @@
 	import type { GetUserResult, LevelData, SearchResult } from "$lib/Types";
 	import { loadLevels } from "$lib/levels";
 	import { onMount } from "svelte";
+	import { PUBLIC_BACKEND_URL } from "$env/static/public";
+	import { getPfpFromId } from "$lib";
 
     export let displayName: string
     export let username: string
@@ -19,25 +21,15 @@
     
     let levels: LevelData[] = [];
     let covers: Record<string, string> = {};
-
-    let id = $page.url.searchParams.get('id') || '';
     
-    async function getProfilePicture(userId: string): Promise<string> {
-        const response = await fetch(`https://cloud.appwrite.io/v1/storage/buckets/profile_pictures/files/${userId}/view?project=676f205d000370a15786&project=676f205d000370a15786&mode=admin`)
-        
-        if (response.ok) {
-            return `https://cloud.appwrite.io/v1/storage/buckets/profile_pictures/files/${userId}/view?project=676f205d000370a15786&project=676f205d000370a15786&mode=admin?` + new Date().getTime();
-        } else {
-            return "/PLACEHOLDER.png"
-        }
-    }
+    let id = $page.url.searchParams.get('id') || '';
 
     async function load() {
         const params = new URLSearchParams({
             id: id
         })
-
-        const response = await fetch(`http://localhost:2050/get_user?${params}`, {
+        
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/get_user?${params}`, {
             method: "GET"
         })
     
@@ -45,10 +37,10 @@
 
         displayName = userData.message.DisplayName
         username = userData.message.Username
-        pfp = await getProfilePicture(userData.message.ID)
+        pfp = await getPfpFromId(userData.message.ID, "/PLACEHOLDER.png")
         bio = userData.message.Bio
 
-        const levelsResponse = await fetch(`http://localhost:2050/get_levels_from_user?${params}`, {
+        const levelsResponse = await fetch(`${PUBLIC_BACKEND_URL}/get_levels_from_user?${params}`, {
             method: "GET"
         })
     

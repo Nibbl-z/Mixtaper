@@ -5,6 +5,7 @@
 	import type { MessageResult, PostResult } from "$lib/Types";
     import { getCookie } from "$lib";
 	import { json } from "@sveltejs/kit";
+	import { PUBLIC_BACKEND_URL } from "$env/static/public";
     
     interface FieldData {
         label: string
@@ -71,7 +72,7 @@
 
         const token = getCookie("token");
 
-        const response = await fetch("http://localhost:2050/upload_cover_art", {
+        const response = await fetch(PUBLIC_BACKEND_URL + "/upload_cover_art", {
             method : "POST",
             headers : (token && id) ? {
                 "Authorization" : token,
@@ -90,7 +91,7 @@
         
         const token = getCookie("token");
 
-        const data: MessageResult = await fetch("http://localhost:2050/upload_riq", {
+        const data: MessageResult = await fetch(PUBLIC_BACKEND_URL + "/upload_riq", {
             method : "POST",
             headers : (token && id) ? {
                 "Authorization" : token,
@@ -109,7 +110,7 @@
     async function deleteUpload(id: string | undefined) {
         const token = getCookie("token");
 
-        const data: MessageResult = await fetch("http://localhost:2050/delete_level", {
+        const data: MessageResult = await fetch(PUBLIC_BACKEND_URL + "/delete_level", {
             method: "POST",
             headers : token ? {
                 "Authorization" : token
@@ -143,7 +144,7 @@
             }
         }
 
-        const postLevelData: PostResult = await fetch("http://localhost:2050/post_level", {
+        const postLevelData: PostResult = await fetch(PUBLIC_BACKEND_URL + "/post_level", {
             method : "POST",
             headers : token ? {
                 "Content-Type" : "application/json",

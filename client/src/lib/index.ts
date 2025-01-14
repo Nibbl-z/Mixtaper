@@ -1,5 +1,6 @@
 // place files you want to import through the `$lib` alias in this folder.
 
+import { PUBLIC_BACKEND_URL, PUBLIC_PROJECT_ID } from "$env/static/public";
 import type { MessageResult } from "./Types";
 
 export function getCookie(name: string) {
@@ -23,7 +24,7 @@ export async function getID(): Promise<string> {
     
     if (token === undefined) {return ""}
     
-    const response = await fetch(`http://localhost:2050/get_my_id`, {
+    const response = await fetch(`${PUBLIC_BACKEND_URL}/get_my_id`, {
         method: "GET",
         headers: {
             "Authorization": token
@@ -38,7 +39,19 @@ export async function getID(): Promise<string> {
     }
 }
 
-export async function getPfp(): Promise<string> {
+export async function getPfpFromId(userId: string, placeholder: string | "/PLACEHOLDER.png"): Promise<string> {
+    const response = await fetch(`https://cloud.appwrite.io/v1/storage/buckets/profile_pictures/files/${userId}/view?project=${PUBLIC_PROJECT_ID}&project=${PUBLIC_PROJECT_ID}&mode=admin`)
+    
+    response.json().then(() => {
+        return placeholder
+    }).catch(() => {
+        return `https://cloud.appwrite.io/v1/storage/buckets/profile_pictures/files/${userId}/view?project=${PUBLIC_PROJECT_ID}&project=${PUBLIC_PROJECT_ID}&mode=admin?` + new Date().getTime();
+    })
+    
+    return placeholder
+}
+
+export async function getPfp(placeholder: string): Promise<string> {
     const id = await getID()
-    return (id == "") ? "/account.png" : `https://cloud.appwrite.io/v1/storage/buckets/profile_pictures/files/${id}/view?project=676f205d000370a15786&project=676f205d000370a15786&mode=admin?` + new Date().getTime();
+    return (id == "") ? "/account.png" : getPfpFromId(id, placeholder)
 }

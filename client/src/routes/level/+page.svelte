@@ -6,6 +6,9 @@
 	import type { Game, GetLevelResult, GetUserResult, MessageResult } from "$lib/Types";
 	import { onMount } from "svelte";
 	import { gameNames } from "$lib/levels";
+    
+    import { PUBLIC_BACKEND_URL } from "$env/static/public";
+
     let songName: string
     let songArtist: string
     let cover: string
@@ -32,7 +35,7 @@
             id: id
         })
         
-        const response = await fetch(`http://localhost:2050/get_level?${params.toString()}`, {
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/get_level?${params.toString()}`, {
             method: "GET",
             headers: {
                 "Origin": "http://localhost:5173"
@@ -58,7 +61,7 @@
             }
         }
 
-        const userResponse = await fetch(`http://localhost:2050/get_user?id=${data.message.uploader}`, {
+        const userResponse = await fetch(`${PUBLIC_BACKEND_URL}/get_user?id=${data.message.uploader}`, {
             method: "GET"
         })
 
@@ -89,7 +92,7 @@
             id: id
         })
 
-        const response = await fetch(`http://localhost:2050/download_riq?${params}`, {
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/download_riq?${params}`, {
             method: "GET"
         })
 

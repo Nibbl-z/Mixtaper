@@ -5,6 +5,7 @@
     import Topbar from "../../components/topbar.svelte";
     import Field from "./field.svelte";
 	import type { ChangeEventHandler } from "svelte/elements";
+	import { PUBLIC_BACKEND_URL } from "$env/static/public";
 
     let displayName: InstanceType<typeof Field>
     let username: InstanceType<typeof Field>
@@ -19,7 +20,7 @@
     async function setDisplayName() {
         const token = getCookie("token");
         
-        const response = await fetch("http://localhost:2050/change_display_name", {
+        const response = await fetch(PUBLIC_BACKEND_URL + "/change_display_name", {
             method: "POST",
             headers: token ? {
                 "Authorization" : token
@@ -36,7 +37,7 @@
     async function setUsername() {
         const token = getCookie("token");
         
-        const response = await fetch("http://localhost:2050/change_username", {
+        const response = await fetch(PUBLIC_BACKEND_URL + "/change_username", {
             method: "POST",
             headers: token ? {
                 "Authorization" : token
@@ -65,7 +66,7 @@
 
         const token = getCookie("token");
         
-        const response = await fetch("http://localhost:2050/change_password", {
+        const response = await fetch(PUBLIC_BACKEND_URL + "/change_password", {
             method: "POST",
             headers: token ? {
                 "Authorization" : token
@@ -85,7 +86,7 @@
     async function setBio() {
         const token = getCookie("token");
         
-        const response = await fetch("http://localhost:2050/change_bio", {
+        const response = await fetch(PUBLIC_BACKEND_URL + "/change_bio", {
             method: "POST",
             headers: token ? {
                 "Authorization" : token
@@ -104,7 +105,7 @@
         const arrayBuffer = await fileUpload.arrayBuffer();
         const bytes = new Uint8Array(arrayBuffer);
         
-        const response = await fetch("http://localhost:2050/upload_pfp", {
+        const response = await fetch(PUBLIC_BACKEND_URL + "/upload_pfp", {
             method: "POST",
             headers: token ? {
                 "Authorization" : token
@@ -195,7 +196,7 @@
         
         <div class="h-[15em] flex flex-row flex-shrink-0">
             <div class="w-[15em] h-[15em] overflow-hidden flex-shrink-0">
-                {#await getPfp()}
+                {#await getPfp("/PLACEHOLDER.png")}
                     <img src={"/PLACEHOLDER.png"} alt="" class="aspect-w-1 aspect-h-1 object-cover rounded-full shadow-2xl w-full h-full">
                 {:then pfp} 
                     <img src={pfp ? pfp : "/PLACEHOLDER.png"} alt="" class="aspect-w-1 aspect-h-1 object-cover rounded-full shadow-2xl w-full h-full">

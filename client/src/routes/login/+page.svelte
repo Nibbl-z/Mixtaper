@@ -7,9 +7,11 @@
     
     let result = ""
     let resultColor = "resultSuccess"
+    
+    import {PUBLIC_BACKEND_URL} from '$env/static/public'
 
     async function login() {
-        const response = await fetch("http://localhost:2050/login", {
+        const response = await fetch(PUBLIC_BACKEND_URL + "/login", {
             method : "POST",
             body : JSON.stringify({
                 identifier : identifierField.value,
@@ -27,14 +29,14 @@
             return
         }
 
-        const verifyResponse = await fetch("http://localhost:2050/send_email_verification", {
+        const verifyResponse = await fetch(PUBLIC_BACKEND_URL + "/send_email_verification", {
             method : "POST",
             headers : {
                 "Authorization" : data.secret || ""
             }
         })
         
-        const verifyData: MessageResult = await response.json()
+        const verifyData: MessageResult = await verifyResponse.json()
         if (verifyData.successful) {
             console.log(verifyData.message)
         }
@@ -54,8 +56,6 @@
         <p class="text-[1.25em] mt-2 mb-1">Password</p>
         
         <input bind:this={passwordField} type="password" id="password" class="w-[100%] h-[1.5em] rounded-xl text-[2em] p-[0.2em] mb-2">
-        
-        <u class="text-center"><a href="/" class="text-xl">Forgot password?</a></u>
         
         <div class="mt-auto">
             <p class="text-xl mb-2">Don't have an account? <u class="text-center"><a href="/signup" class="text-xl">Sign up here</a></u></p>

@@ -1,6 +1,7 @@
 <script lang="ts">
     import Topbar from "../../components/topbar.svelte";
     import type { MessageResult } from "$lib/Types"
+	import { PUBLIC_BACKEND_URL } from "$env/static/public";
     let emailField: HTMLInputElement
     let usernameField: HTMLInputElement
     let passwordField: HTMLInputElement
@@ -9,7 +10,7 @@
     let resultColor = "resultSuccess"
     
     async function signup() {
-        const response = await fetch("http://localhost:2050/signup", {
+        const response = await fetch(PUBLIC_BACKEND_URL + "/signup", {
             method : "POST",
             body : JSON.stringify({
                 email : emailField.value,

@@ -4,6 +4,7 @@
     import { page } from '$app/stores';
 	import { getCookie } from "$lib";
 	import type { MessageResult } from "$lib/Types";
+	import { PUBLIC_BACKEND_URL } from "$env/static/public";
 
     let userId = $page.url.searchParams.get('userId') || '';
     let secret = $page.url.searchParams.get('secret') || '';
@@ -16,7 +17,7 @@
             userId : userId,
             secret : secret
         })
-        const response = await fetch(`http://localhost:2050/verify_email?${params.toString()}`, {
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/verify_email?${params.toString()}`, {
             method : "PUT",
             headers : token ? {
                 "Authorization" : token

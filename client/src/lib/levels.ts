@@ -1,3 +1,4 @@
+import { PUBLIC_PROJECT_ID } from "$env/static/public";
 import type { Game, LevelData, SearchResult } from "./Types";
 
 async function checkCoverArt(url: string): Promise<boolean> {
@@ -13,7 +14,7 @@ export async function loadLevels(levels: SearchResult): Promise<{ results: Level
     results = levels.message
     
     const coverPromises = results.map(result => {
-        const coverUrl = `https://cloud.appwrite.io/v1/storage/buckets/cover_art/files/${result.$id}/view?project=676f205d000370a15786&project=676f205d000370a15786`
+        const coverUrl = `https://cloud.appwrite.io/v1/storage/buckets/cover_art/files/${result.$id}/view?project=${PUBLIC_PROJECT_ID}&project=${PUBLIC_PROJECT_ID}`
         return checkCoverArt(coverUrl).then(exists => ({
             id: result.$id,
             url: exists ? coverUrl : "/PLACEHOLDER.png"

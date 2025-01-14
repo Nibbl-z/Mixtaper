@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
+	import { PUBLIC_BACKEND_URL } from "$env/static/public";
 	import { deleteCookie, getCookie, getID, getPfp } from "$lib";
 	import type { GetUserResult, MessageResult } from "$lib/Types";
 	import { onMount } from "svelte";
@@ -26,7 +27,7 @@
             id: id
         })
 
-        const response = await fetch(`http://localhost:2050/get_user?${params}`, {
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/get_user?${params}`, {
             method: "GET"
         })
     
@@ -62,7 +63,7 @@
         
         <div class="relative h-[100%] group">
             <a href="/" class="h-[100%] flex items-center">
-                {#await getPfp()}
+                {#await getPfp("/account.png")}
                     <img src="/account.png" class="text-[#FFFFFF] h-[70%] hover:brightness-75" alt="Account"/>
                 {:then pfp} 
                     <img src={pfp} class="text-[#FFFFFF] h-[70%] hover:brightness-75" alt="Account"/>

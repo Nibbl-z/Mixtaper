@@ -9,6 +9,7 @@
 
     import type { LevelData, SearchResult } from "$lib/Types";
 	import { onMount } from "svelte";
+	import { PUBLIC_BACKEND_URL } from "$env/static/public";
     
     let results: LevelData[] = [];
     
@@ -17,7 +18,7 @@
             query: query
         })
         
-        const response = await fetch(`http://localhost:2050/search?${params.toString()}`, {
+        const response = await fetch(`${PUBLIC_BACKEND_URL}/search?${params.toString()}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
