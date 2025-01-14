@@ -6,6 +6,7 @@
 	import type { Game, GetLevelResult, GetUserResult, MessageResult } from "$lib/Types";
 	import { onMount } from "svelte";
 	import { gameNames } from "$lib/levels";
+
     
     import { PUBLIC_BACKEND_URL } from "$env/static/public";
 
@@ -91,7 +92,7 @@
         const params = new URLSearchParams({
             id: id
         })
-
+        
         const response = await fetch(`${PUBLIC_BACKEND_URL}/download_riq?${params}`, {
             method: "GET"
         })
