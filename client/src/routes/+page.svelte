@@ -26,7 +26,7 @@
                 const coverUrl = `https://cloud.appwrite.io/v1/storage/buckets/cover_art/files/${result.$id}/view?project=${PUBLIC_PROJECT_ID}&project=${PUBLIC_PROJECT_ID}`
                 return checkCoverArt(coverUrl).then(exists => ({
                     id: result.$id,
-                    url: exists ? coverUrl : "/PLACEHOLDER.png"
+                    url: exists ? coverUrl : "/placeholder_coverart.png"
                 }))
             })
 
@@ -69,7 +69,6 @@
             cover={covers[level.$id]}
             gamesUsed={level.gamesUsed} 
             bpm={level.bpm} 
-            duration="1:20"
             />
         {/each}
     </div>    
@@ -90,5 +89,7 @@
 <a href="https://www.flaticon.com/free-icons/heart" title="heart icons">Heart icons created by Chanut - Flaticon</a>
 
 <a href="https://www.flaticon.com/free-icons/rythm" title="rythm icons">Rythm icons created by Freepik - Flaticon</a>
-\
+
 <a href="https://www.flaticon.com/free-icons/clock" title="clock icons">Clock icons created by Ilham Fitrotul Hayat - Flaticon</a>
+
+<a href="https://www.flaticon.com/free-icons/create-post" title="create post icons">Create post icons created by RaphaelBuquet - Flaticon</a>

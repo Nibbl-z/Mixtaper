@@ -18,7 +18,7 @@ func ChangeBio(ctx *atreugo.RequestCtx) error {
 	if !success {
 		return utils.UnauthorizedResponse(ctx)
 	}
-
+	
 	account := appwrite.NewAccount(client)
 	
 	_, err := account.UpdatePrefs(

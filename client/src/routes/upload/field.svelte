@@ -8,13 +8,27 @@
 
     export let fileTitle: string = ""
     export let fileMaxSize: number = 0
-    export let isImage: boolean = false
+    export let isImage: boolean = false 
     
     let width: string = label == "" ? "100%" : "70%"
     
     let field: HTMLInputElement
     let textArea: HTMLTextAreaElement
     let fileUpload: File
+
+    let fileInput: HTMLInputElement
+
+    function fileClick() {
+        fileInput.click()
+    }
+    
+    function handleFileSelect(event: Event) {
+        const target = event.target as HTMLInputElement
+        
+        if (target.files?.[0]) {
+            fileUpload = target.files[0]
+        }
+    }
 
     export function getField(): string {
         if (field != null) {
@@ -71,13 +85,22 @@
     {#if big} 
         <textarea bind:this={textArea} class="w-[{width}] h-[6em] rounded-xl text-[2em] p-[0.2em] ml-auto"></textarea>
     {:else if file}
+        <input
+            bind:this={fileInput}
+            type="file"
+            accept={isImage ? ".png,.jpg,.jpeg" : ".riq"}
+            onchange={handleFileSelect}
+            class="hidden"
+            />
+        <!-- svelte-ignore a11y_click_events_have_key_events SHUT UPPPPPP -->
         <div 
         role="button" 
         tabindex=0 
         aria-label="Drop files here" 
-        on:drop={drop} 
-        on:dragover|preventDefault={hover}
-        on:dragleave={leave}
+        ondrop={drop} 
+        ondragover={hover}
+        ondragleave={leave}
+        onclick={fileClick}
         class="w-[{width}] ml-auto {hovering ? "bg-[#63555a]" : "bg-[#262329]"} border-dotted border-[#FFFFFF] border-4 p-2 flex items-center justify-center flex-col">
             <p class="w-full text-center text-2xl">{fileUpload ? fileUpload.name : fileTitle}</p>
             <img src={isImage ? (imageUrl ? imageUrl : "/upload.png") : "/upload.png"} alt="Upload Icon" class="w-[4em] my-2">

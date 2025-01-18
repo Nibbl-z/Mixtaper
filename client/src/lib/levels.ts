@@ -7,6 +7,14 @@ async function checkCoverArt(url: string): Promise<boolean> {
     return response.ok
 }
 
+export async function getCoverArtById(id: string): Promise<string> {
+    const coverUrl = `https://cloud.appwrite.io/v1/storage/buckets/cover_art/files/${id}/view?project=${PUBLIC_PROJECT_ID}&project=${PUBLIC_PROJECT_ID}`
+    
+    return checkCoverArt(coverUrl).then(exists => (
+        exists ? coverUrl : "/placeholder_coverart.png"
+    ))
+}
+
 export async function loadLevels(levels: SearchResult): Promise<{ results: LevelData[], covers: Record<string, string> }> {
     let results: LevelData[] = [];
     let covers: Record<string, string> = {}
@@ -17,7 +25,7 @@ export async function loadLevels(levels: SearchResult): Promise<{ results: Level
         const coverUrl = `https://cloud.appwrite.io/v1/storage/buckets/cover_art/files/${result.$id}/view?project=${PUBLIC_PROJECT_ID}&project=${PUBLIC_PROJECT_ID}`
         return checkCoverArt(coverUrl).then(exists => ({
             id: result.$id,
-            url: exists ? coverUrl : "/PLACEHOLDER.png"
+            url: exists ? coverUrl : "/placeholder_coverart.png"
         }))
     })
     

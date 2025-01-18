@@ -14,7 +14,7 @@
     export let bio: string
     export let pfp: string
     
-    pfp = "/PLACEHOLDER.png"
+    pfp = "/placeholder_pfp.png"
     displayName = "Loading..."
     username = "Loading..."
     bio = "Loading..."
@@ -37,7 +37,7 @@
 
         displayName = userData.message.DisplayName
         username = userData.message.Username
-        pfp = await getPfpFromId(userData.message.ID, "/PLACEHOLDER.png")
+        pfp = await getPfpFromId(userData.message.ID, "/placeholder_pfp.png")
         bio = userData.message.Bio
 
         const levelsResponse = await fetch(`${PUBLIC_BACKEND_URL}/get_levels_from_user?${params}`, {
@@ -91,7 +91,6 @@
             cover={covers[level.$id]}
             gamesUsed={level.gamesUsed} 
             bpm={level.bpm} 
-            duration="1:20"
             />
         {/each}
     </div>    

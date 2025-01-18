@@ -196,10 +196,10 @@
         
         <div class="h-[15em] flex flex-row flex-shrink-0">
             <div class="w-[15em] h-[15em] overflow-hidden flex-shrink-0">
-                {#await getPfp("/PLACEHOLDER.png")}
-                    <img src={"/PLACEHOLDER.png"} alt="" class="aspect-w-1 aspect-h-1 object-cover rounded-full shadow-2xl w-full h-full">
+                {#await getPfp("/placeholder_pfp.png")}
+                    <img src={"/placeholder_pfp.png"} alt="" class="aspect-w-1 aspect-h-1 object-cover rounded-full shadow-2xl w-full h-full">
                 {:then pfp} 
-                    <img src={pfp ? pfp : "/PLACEHOLDER.png"} alt="" class="aspect-w-1 aspect-h-1 object-cover rounded-full shadow-2xl w-full h-full">
+                    <img src={imageUrl ? imageUrl : pfp ? pfp : "/placeholder_pfp.png"} alt="" class="aspect-w-1 aspect-h-1 object-cover rounded-full shadow-2xl w-full h-full">
                 {/await}
                 
             </div>

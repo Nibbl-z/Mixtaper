@@ -39,16 +39,14 @@ export async function getID(): Promise<string> {
     }
 }
 
-export async function getPfpFromId(userId: string, placeholder: string | "/PLACEHOLDER.png"): Promise<string> {
+export async function getPfpFromId(userId: string, placeholder: string | "/placeholder_pfp.png"): Promise<string> {
     const response = await fetch(`https://cloud.appwrite.io/v1/storage/buckets/profile_pictures/files/${userId}/view?project=${PUBLIC_PROJECT_ID}&project=${PUBLIC_PROJECT_ID}&mode=admin`)
     
-    response.json().then(() => {
-        return placeholder
-    }).catch(() => {
+    if (response.ok) {
         return `https://cloud.appwrite.io/v1/storage/buckets/profile_pictures/files/${userId}/view?project=${PUBLIC_PROJECT_ID}&project=${PUBLIC_PROJECT_ID}&mode=admin?` + new Date().getTime();
-    })
-    
-    return placeholder
+    } else {
+        return placeholder
+    }
 }
 
 export async function getPfp(placeholder: string): Promise<string> {

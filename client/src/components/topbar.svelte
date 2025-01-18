@@ -66,7 +66,7 @@
                 {#await getPfp("/account.png")}
                     <img src="/account.png" class="text-[#FFFFFF] h-[70%] hover:brightness-75" alt="Account"/>
                 {:then pfp} 
-                    <img src={pfp} class="text-[#FFFFFF] h-[70%] hover:brightness-75" alt="Account"/>
+                    <img src={pfp} class="text-[#FFFFFF] h-[70%] hover:brightness-75 rounded-full" alt="Account"/>
                 {/await}
             </a>
             <div class="flex flex-col text-center opacity-0 absolute right-0 bg-topbar group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto z-50">

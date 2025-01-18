@@ -10,8 +10,10 @@
     import type { LevelData, SearchResult } from "$lib/Types";
 	import { onMount } from "svelte";
 	import { PUBLIC_BACKEND_URL } from "$env/static/public";
+	import { loadLevels } from "$lib/levels";
     
-    let results: LevelData[] = [];
+    let levels: LevelData[] = []
+    let covers: Record<string, string> = {}
     
     async function getResults() {
         const params = new URLSearchParams({
@@ -30,7 +32,9 @@
         if (response.ok) {
             const data: SearchResult = await response.json()
         
-            results = data.message
+            const { results, covers: levelCovers } = await loadLevels(data);
+            levels = results;
+            covers = levelCovers;
             resultsCount = results.length
             console.log(results)
         }
@@ -50,15 +54,14 @@
 
 <div class="flex items-center justify-center flex-col">
     <div class="width-[100em] grid grid-cols-1 2cols:grid-cols-2 justify-items-center gap-8">
-        {#each results as level}
+        {#each levels as level}
             <Level 
             id={level.$id}
             songName={level.songName} 
             songArtist={level.songArtist} 
-            cover="/PLACEHOLDER.png" 
+            cover={covers[level.$id]}
             gamesUsed={level.gamesUsed} 
             bpm={level.bpm} 
-            duration="1:20"
             />
         {/each}
     </div>    

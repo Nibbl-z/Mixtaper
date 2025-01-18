@@ -5,7 +5,7 @@
 	import { page } from "$app/stores";
 	import type { Game, GetLevelResult, GetUserResult, MessageResult } from "$lib/Types";
 	import { onMount } from "svelte";
-	import { gameNames } from "$lib/levels";
+	import { gameNames, getCoverArtById } from "$lib/levels";
 
     
     import { PUBLIC_BACKEND_URL } from "$env/static/public";
@@ -24,7 +24,7 @@
     songName = "Loading..."
     songArtist = "Loading..."
     description = "Loading..."
-    cover = "/PLACEHOLDER.png"
+    cover = "/placeholder_coverart.png"
 
     let id = $page.url.searchParams.get('id') || '';
 
@@ -145,7 +145,12 @@
 
 <div class="flex items-center justify-center flex-col mt-10 mb-10">
     <div class="bg-item p-3 w-[80%] rounded-3xl flex items-left shadow-2xl mb-10">
-        <img src={cover} alt="Cover Art" class="h-auto max-h-[15em] rounded-xl shadow-2xl">
+        {#await getCoverArtById(id)}
+            <img src={cover} alt="Cover Art" class="h-[15em] rounded-xl shadow-2xl">
+        {:then loadedCover} 
+            <img src={loadedCover} alt="Cover Art" class="h-[15em] rounded-xl shadow-2xl">
+        {/await}
+        
         <div class="mx-5 flex flex-col space-y-[-0.2em]">
             <h1 class="text-[2em] leading-[125%]">{songName}</h1>        
             <h1 class="text-[1.5em] text-author truncate">{songArtist}</h1>
