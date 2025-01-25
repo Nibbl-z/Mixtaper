@@ -18,7 +18,7 @@ func main() {
     server := atreugo.New(config)
     
     server.OPTIONS("/*", func(ctx *atreugo.RequestCtx) error {
-        ctx.Response.Header.Set("Access-Control-Allow-Origin", "http://localhost:5173")
+        ctx.Response.Header.Set("Access-Control-Allow-Origin", "https://mixtaper.nibbles.hackclub.app")
         ctx.Response.Header.Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
         ctx.Response.Header.Set("Access-Control-Allow-Headers", "Content-Type, Authorization, ID")
         ctx.Response.Header.Set("Access-Control-Allow-Credentials", "true")
@@ -26,7 +26,7 @@ func main() {
     })
     
     server.UseBefore(func(ctx *atreugo.RequestCtx) error {
-        ctx.Response.Header.Set("Access-Control-Allow-Origin", "http://localhost:5173")
+        ctx.Response.Header.Set("Access-Control-Allow-Origin", "https://mixtaper.nibbles.hackclub.app")
         ctx.Response.Header.Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
         ctx.Response.Header.Set("Access-Control-Allow-Headers", "Content-Type, Authorization, ID")
         ctx.Response.Header.Set("Access-Control-Allow-Credentials", "true")
