@@ -38,9 +38,6 @@
         
         const response = await fetch(`${PUBLIC_BACKEND_URL}/get_level?${params.toString()}`, {
             method: "GET",
-            headers: {
-                "Origin": "http://localhost:5173"
-            },
         })
 
         const data: GetLevelResult = await response.json()

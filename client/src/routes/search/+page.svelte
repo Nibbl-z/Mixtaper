@@ -25,7 +25,6 @@
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json",
-                "Origin": "http://localhost:5173"
             }
         })
         

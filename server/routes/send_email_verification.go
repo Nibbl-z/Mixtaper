@@ -16,7 +16,7 @@ func SendEmailVerification(ctx * atreugo.RequestCtx) error {
 	account := appwrite.NewAccount(client)
 	
 	response, err := account.CreateVerification(
-		"http://localhost:5173/verify_email",
+		"https://mixtaper.nibbles.hackclub.app/verify_email",
 	)
 	
 	if err != nil {

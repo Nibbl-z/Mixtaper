@@ -13,9 +13,6 @@
     async function getResults() {
         const response = await fetch(PUBLIC_BACKEND_URL + "/recent_levels", {
             method: "GET",
-            headers: {
-                "Origin": "http://localhost:5173"
-            },
         })
 
         if (response.ok) {
