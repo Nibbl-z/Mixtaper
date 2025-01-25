@@ -14,7 +14,7 @@ func main() {
 		panic(err)
 	}
 	
-	config := atreugo.Config{Addr: "localhost:2050", NoDefaultServerHeader: true, MaxRequestBodySize: 20 * 1024 * 1024}
+	config := atreugo.Config{Addr: "localhost:37929", NoDefaultServerHeader: true, MaxRequestBodySize: 20 * 1024 * 1024}
     server := atreugo.New(config)
     
     server.OPTIONS("/*", func(ctx *atreugo.RequestCtx) error {
