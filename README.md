@@ -1,4 +1,4 @@
-# Mixtaper
+![Mixtaper](https://github.com/Nibbl-z/Mixtaper/blob/main/client/static/logo.png?raw=true)
 
 ### A website to upload and share custom levels for [Bits and Bops!](https://store.steampowered.com/app/1929290/Bits__Bops/)
 
